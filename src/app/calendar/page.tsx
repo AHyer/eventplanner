@@ -1,17 +1,10 @@
-// export default function CalendarPage() {  // function = component ;  returns UI elements
-//   return (
-//     // <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-//     <div>
-//       <main className="calendar-background flex flex-1 w-full flex-col items-center justify-between py-66 px-16 bg-white dark:bg-black "> </main>
-//     </div>
-//   );
-// }
-
-// app/dashboard/page.tsx
+// calendar/page.tsx
 "use client";
 
 import * as React from "react";
 import { Calendar } from "@/components/ui/calendar";
+
+const CalendarAny = Calendar as React.ComponentType<any>;
 
 export default function CalendarPage() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -22,7 +15,7 @@ export default function CalendarPage() {
         Pick a Date
       </h1>
       
-      <Calendar
+      <CalendarAny
         mode="single"
         selected={date}
         onSelect={setDate}
