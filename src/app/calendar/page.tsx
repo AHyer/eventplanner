@@ -13,6 +13,8 @@
 import * as React from "react";
 import { Calendar } from "@/components/ui/calendar";
 
+const CalendarAny = Calendar as React.ComponentType<any>;
+
 export default function CalendarPage() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
 
@@ -22,7 +24,7 @@ export default function CalendarPage() {
         Pick a Date
       </h1>
       
-      <Calendar
+      <CalendarAny
         mode="single"
         selected={date}
         onSelect={setDate}
