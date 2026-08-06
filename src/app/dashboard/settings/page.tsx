@@ -3,7 +3,7 @@
 
 import * as React from "react";
 import { Calendar } from "@/components/ui/calendar";
-import "@daypicker/react/style.css"
+//import "@daypicker/react/style.css"
 
 const TypedCalendar = Calendar as React.ComponentType<{
   mode: "single";
