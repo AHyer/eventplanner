@@ -1,0 +1,90 @@
+Enum "event_status" {
+  "planning"
+  "confirmed"
+  "in_progress"
+  "done"
+}
+
+Enum "participant_status" {
+  "invited"
+  "confirmed"
+  "declined"
+}
+
+Enum "participant_type" {
+  "guest"
+  "vendor"
+}
+
+Enum "role" {
+  "host"
+  "vendor"
+}
+
+Enum "task_status" {
+  "todo"
+  "in_progress"
+  "done"
+}
+
+Table "events" {
+  "id" serial [pk, not null, increment]
+  "user_id" integer [not null]
+  "name" varchar(255) [not null]
+  "event_date" timestamp
+  "event_venue" varchar
+  "event_address" varchar
+  "event_vibe" text
+  "event_type" text
+  "numGuests" integer
+  "status" event_status [not null, default: 'planning']
+  "created_at" timestamp [not null, default: `now()`]
+}
+
+Table "notes" {
+  "id" serial [pk, not null, increment]
+  "event_id" integer
+  "task_id" integer
+  "body" text [not null]
+  "author_role" role [not null, default: 'host']
+  "created_at" timestamp [not null, default: `now()`]
+}
+
+Table "participants" {
+  "id" serial [pk, not null, increment]
+  "event_id" integer [not null]
+  "name" varchar(255) [not null]
+  "type" participant_type [not null]
+  "status" participant_status [not null, default: 'invited']
+  "cost" numeric(10,2)
+  "created_at" timestamp [not null, default: `now()`]
+}
+
+Table "tasks" {
+  "id" serial [pk, not null, increment]
+  "event_id" integer [not null]
+  "name" varchar(255) [not null]
+  "due_date" timestamp
+  "status" task_status [not null, default: 'todo']
+  "assigned_role" role [not null, default: 'host']
+  "created_at" timestamp [not null, default: `now()`]
+}
+
+Table "users" {
+  "id" integer [pk, increment]
+  "name" varchar(255) [not null]
+  "role" varchar(255) [not null]
+  "email" varchar(255) [not null]
+
+  Indexes {
+    email [unique, name: "users_email_unique"]
+  }
+}
+
+Ref "notes_event_id_events_id_fk":"events"."id" ?<? "notes"."event_id" [update: no action, delete: cascade]
+
+Ref "notes_task_id_tasks_id_fk":"tasks"."id" ?<? "notes"."task_id" [update: no action, delete: cascade]
+
+Ref "participants_event_id_events_id_fk":"events"."id" <? "participants"."event_id" [update: no action, delete: cascade]
+
+Ref "tasks_event_id_events_id_fk":"events"."id" <? "tasks"."event_id" [update: no action, delete: cascade]

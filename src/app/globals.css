@@ -121,7 +121,7 @@
 
 .hero-background {
   /* Relative path to the image from your CSS file */
-  background-image: url('/alexander-grey-62vi3TG5EDg-unsplash.png'); 
+  background-image: url('/alexander-grey-62vi3TG5EDg-unsplash.jpg'); 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -141,7 +141,7 @@
 
 .events-background {
   /* Relative path to the image from your CSS file */
-  background-image: url('/alexander-grey-62vi3TG5EDg-unsplash.png'); 
+  background-image: url('/alexander-grey-62vi3TG5EDg-unsplash.jpg'); 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -150,7 +150,7 @@
 }
 .calendar-background {
   /* Relative path to the image from your CSS file */
-  background-image: url('/voska-studio-x-Naj1xzTj4-unsplash.jpg'); 
+  background-image: url('/alexander-grey-62vi3TG5EDg-unsplash.jpg'); 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -180,7 +180,7 @@
 
 .vendor-background {
   /* Relative path to the image from your CSS file */
-  background-image: url('/bruno-ngarukiye-fJbpoLw1YYM-unsplash.jpg'); 
+  background-image: url('/voska-studio-x-Naj1xzTj4-unsplash.jpg'); 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -200,7 +200,7 @@
 
 .food-background {
   /* Relative path to the image from your CSS file */
-  background-image: url('/francesca-grima-Nyo9-_Uy5PY-unsplash.jpg'); 
+  background-image: url('/bruno-ngarukiye-fJbpoLw1YYM-unsplash.jpg'); 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -220,7 +220,7 @@
 
 .deco-background {
   /* Relative path to the image from your CSS file */
-  background-image: url('/francesca-grima-Nyo9-_Uy5PY-unsplash.jpg'); 
+  background-image: url('/christina-victoria-craft-xpIv5g64igM-unsplash.jpg'); 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
