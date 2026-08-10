@@ -3,7 +3,7 @@
 import { useActionState } from 'react';
 import {createUser} from './createuser';
 
-const initialState = { success: null, message: '' };
+const initialState = { success: false, message: '' };
 
 export default function CreateUserForm() {
   const [state, formAction, isPending] = useActionState(createUser, initialState);
