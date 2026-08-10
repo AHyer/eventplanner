@@ -1,144 +1,146 @@
-// src/db/schema.ts
-import {
-  pgTable,
-  pgEnum,
-  serial,
-  varchar,
-  text,
-  timestamp,
-  numeric,
-  integer,
-} from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+import { pgTable, serial, text, integer, varchar, timestamp, boolean, decimal, json } from "drizzle-orm/pg-core";
 
-// ---- Enums ----
-// Keeping these as Postgres enums (not just TS string unions) so the
-// database itself enforces valid values, not just the app layer.
-
-export const eventStatusEnum = pgEnum("event_status", [
-  "planning",
-  "confirmed",
-  "in_progress",
-  "done",
-]);
-
-export const taskStatusEnum = pgEnum("task_status", [
-  "todo",
-  "in_progress",
-  "done",
-]);
-
-export const roleEnum = pgEnum("role", ["host", "vendor"]);
-
-// Guests and vendors share a shape (name, contact status, cost) closely
-// enough that one table with a `type` column avoids duplicating columns
-// across two near-identical tables. Split into separate tables later if
-// their fields diverge more than this.
-export const participantTypeEnum = pgEnum("participant_type", [
-  "guest",
-  "vendor",
-]);
-
-export const participantStatusEnum = pgEnum("participant_status", [
-  "invited", // guest: invited / vendor: contacted
-  "confirmed", // guest: RSVP'd yes / vendor: booked
-  "declined", // guest: RSVP'd no / vendor: fell through
-]);
-
-// ---- Tables ----
+export const users = pgTable("users", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "users_id_identity_seq" }), 
+  username: varchar("username"),
+  email: varchar("email"),
+  role: text("role"),
+  created_at: timestamp("created_at").defaultNow().notNull(), 
+});
 
 export const events = pgTable("events", {
-  id: serial("id").primaryKey(),
-  name: varchar("name", { length: 255 }).notNull(),
-  eventDate: timestamp("event_date").notNull(),
-  location: varchar("location", { length: 255 }),
-  status: eventStatusEnum("status").notNull().default("planning"),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "events_id_identity_seq" }), 
+  user_id: integer("user_id").notNull(),
+  eventName: varchar("eventName"),
+  eventDate: text("eventDate"),
+  eventVenue: varchar("eventVenue"),
+  venueAddress: varchar("venueAddress"),
+  eventVibe: text("eventVibe"),
+  numGuests: integer("numGuests"),
+  status: text("status"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(), 
 });
 
-export const tasks = pgTable("tasks", {
-  id: serial("id").primaryKey(),
-  eventId: integer("event_id")
-    .notNull()
-    .references(() => events.id, { onDelete: "cascade" }),
-  name: varchar("name", { length: 255 }).notNull(),
-  dueDate: timestamp("due_date"),
-  status: taskStatusEnum("status").notNull().default("todo"),
-  assignedRole: roleEnum("assigned_role").notNull().default("host"),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
+export const event_guest_profile = pgTable("event_guest_profile", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "g_profile_id_identity_seq" }), 
+  event_id: integer("event_id").notNull(),
+  profile_gender: varchar("profile_gender"),
+  profile_education: varchar("profile_education"),
+  profile_age: integer("profile_age"),
+  profile_income_min: text("profile_income_min"),
+  profile_income_max: text("profile_income_max"),
 });
 
-export const usersTable = pgTable("users", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 255 }).notNull(),
-  age: integer().notNull(),
-  email: varchar({ length: 255 }).notNull().unique(),
+export const vendors = pgTable("vendors", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "vendor_id_identity_seq" }), 
+  vendor_name: varchar("vendor_name"),
+  vendor_phone: text("vendor_phone"),
+  vendor_email: text("vendor_email"),
+  event_id: integer("event_id").notNull(),
+  status: varchar("status"),
+  created_at: timestamp("created_at").defaultNow().notNull(), 
 });
 
-export const participants = pgTable("participants", {
-  id: serial("id").primaryKey(),
-  eventId: integer("event_id")
-    .notNull()
-    .references(() => events.id, { onDelete: "cascade" }),
-  name: varchar("name", { length: 255 }).notNull(),
-  type: participantTypeEnum("type").notNull(),
-  status: participantStatusEnum("status").notNull().default("invited"),
-  // numeric (not integer/float) for money — avoids floating point
-  // rounding issues on cost totals
-  cost: numeric("cost", { precision: 10, scale: 2 }),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
+export const guests = pgTable("guests", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "guests_id_identity_seq" }), 
+  event_id: integer("event_id").notNull(),
+  guest_name: varchar("guest_name"),
+  guest_phone: text("guest_phone"),
+  guest__email: text("guest__email"),
+  guest_address: text("guest_address"),
+  status: text("status"),
+  total_cost_per_guest: decimal("total_cost_per_guest", { precision: 10, scale: 2 }),
+  created_at: timestamp("created_at").defaultNow().notNull(), 
 });
 
-// Notes can belong to either an Event directly or a specific Task —
-// both foreign keys are nullable, and exactly one should be set per row.
-// (Enforce that "exactly one" rule at the app/server-action layer;
-// Drizzle doesn't give you a clean CHECK-constraint helper for this yet.)
-export const notes = pgTable("notes", {
-  id: serial("id").primaryKey(),
-  eventId: integer("event_id").references(() => events.id, {
-    onDelete: "cascade",
-  }),
-  taskId: integer("task_id").references(() => tasks.id, {
-    onDelete: "cascade",
-  }),
-  body: text("body").notNull(),
-  authorRole: roleEnum("author_role").notNull().default("host"),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
+// export const tasks = pgTable("tasks", {
+//   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "tasks_id_identity_seq" }), 
+//   eventId: integer("eventId").notNull(),
+//   name: varchar("name").notNull(),
+//   dueDate: timestamp("dueDate"),
+//   status: text("status"),
+//   assignedRole: varchar("assignedRole"),
+//   createdAt: timestamp("createdAt").defaultNow().notNull(), 
+// });
+
+// export const notes = pgTable("notes", {
+//   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "notes_id_identity_seq" }), 
+//   eventId: integer("eventId").notNull(),
+//   name: varchar("name").notNull(),
+//   body: text("body"),
+//   status: varchar("status"),
+//   authorRole: varchar("authorRole").notNull(),
+//   createdAt: timestamp("createdAt").defaultNow().notNull(), 
+// });
+
+export const menu = pgTable("menu", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "menu_id_identity_seq" }), 
+  vendor_id: varchar("vendor_id"),
+  event_id: integer("event_id").notNull(),
+  menu_descr: varchar("menu_descr"),
+  status: varchar("status"),
+  created_at: timestamp("created_at").defaultNow().notNull(), 
 });
 
-// ---- Relations ----
-// These power Drizzle's relational query API (db.query.events.findMany({
-// with: { tasks: true, participants: true } })) so you can fetch an
-// event with its related rows in one call instead of hand-joining.
+export const deco = pgTable("deco", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "deco_id_identity_seq" }), 
+  vendor_id: varchar("vendor_id"),
+  event_id: integer("event_id").notNull(),
+  deco_descr: varchar("deco_descr"),
+  status: varchar("status"),
+  created_at: timestamp("created_at").defaultNow().notNull(), 
+});
 
-export const eventsRelations = relations(events, ({ many }) => ({
-  tasks: many(tasks),
-  participants: many(participants),
-  notes: many(notes),
-}));
+export const drink_menu = pgTable("drink_menu", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "drink_menu_id_identity_seq" }), 
+  vendor_id: varchar("vendor_id"),
+  menu_id: integer("menu_id").notNull(),
+  drink_menu_descr: varchar("drink_menu_descr"),
+  status: varchar("status"),
+  created_at: timestamp("created_at").defaultNow().notNull(), 
+});
 
-export const tasksRelations = relations(tasks, ({ one, many }) => ({
-  event: one(events, {
-    fields: [tasks.eventId],
-    references: [events.id],
-  }),
-  notes: many(notes),
-}));
+export const drink_recipe = pgTable("drink_recipe", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "drink_recipe_id_identity_seq" }), 
+  drink_menu_id: integer("drink_menu_id").notNull(),
+  drink_recipe_descr: varchar("drink_recipe_descr"),
+  drink_ingerdients: text("drink_ingerdients"),
+  status: varchar("status"),
+  created_at: timestamp("created_at").defaultNow().notNull(), 
+});
 
-export const participantsRelations = relations(participants, ({ one }) => ({
-  event: one(events, {
-    fields: [participants.eventId],
-    references: [events.id],
-  }),
-}));
+export const main_dish = pgTable("main_dish", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "main_dish_id_identity_seq" }), 
+  menu_id: integer("menu_id"),
+  m_d_recipe_descr: varchar("m_d_recipe_descr"),
+  m_d_ingredients: text("m_d_ingredients"),
+  status: varchar("status"),
+  created_at: timestamp("created_at").defaultNow().notNull(), 
+});
 
-export const notesRelations = relations(notes, ({ one }) => ({
-  event: one(events, {
-    fields: [notes.eventId],
-    references: [events.id],
-  }),
-  task: one(tasks, {
-    fields: [notes.taskId],
-    references: [tasks.id],
-  }),
-}));
+export const side_dish = pgTable("side_dish", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "side_dish_id_identity_seq" }), 
+  menu_id: integer("menu_id"),
+  s_d_recipe_descr: varchar("s_d_recipe_descr"),
+  s_d_ingredients: text("s_d_ingredients"),
+  status: varchar("status"),
+  created_at: timestamp("created_at").defaultNow().notNull(), 
+});
+
+export const dessert = pgTable("dessert", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "dessert_id_identity_seq" }), 
+  menu_id: integer("menu_id"),
+  dessert_recipe_descr: varchar("dessert_recipe_descr"),
+  dessert_ingredients: text("dessert_ingredients"),
+  status: varchar("status"),
+  created_at: timestamp("created_at").defaultNow().notNull(), 
+});
+
+export const deco_group = pgTable("deco_group", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "deco_group_id_identity_seq" }), 
+  deco_id: integer("deco_id"),
+  deco_group_descr: varchar("deco_group_descr"),
+  deco_group_area: varchar("deco_group_area"),
+  status: varchar("status"),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+});
