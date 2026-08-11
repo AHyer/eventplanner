@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+/* @import "react-day-picker/style.css"; */
 
 @custom-variant dark (&:is(.dark *));
 
@@ -9,7 +10,9 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-aboreto);
+  --font-aboreto: var(--font-aboreto), sans-serif;
+  --font-arapey: var(--font-arapey), sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -49,11 +52,11 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
+  --background: oklch(92.642% 0.02178 359.393);
+  --foreground: oklch(54.192% 0.09615 7.432);
+  --card: oklch(49.543% 0.12349 22.651);
+  --card-foreground: oklch(14.479% 0.00002 271.152);
+  --popover: oklch(100% 0.00011 271.152);
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
@@ -116,6 +119,128 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
+
+.hero-background {
+  /* Relative path to the image from your CSS file */
+  background-image: url('/alexander-grey-62vi3TG5EDg-unsplash.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.login-background {
+  /* Relative path to the image from your CSS file */
+  background-image: url('/yingyi-dai-khJJqciKS10-unsplash.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.events-background {
+  /* Relative path to the image from your CSS file */
+  background-image: url('/alexander-grey-62vi3TG5EDg-unsplash.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+}
+.calendar-background {
+  /* Relative path to the image from your CSS file */
+  background-image: url('/alexander-grey-62vi3TG5EDg-unsplash.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.invite-background {
+  /* Relative path to the image from your CSS file */
+  background-image: url('/william-montout-oc_xBmnEe9w-unsplash.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.todo-background {
+  /* Relative path to the image from your CSS file */
+  background-image: url('/jess-bailey-F5nV6DnCf3I-unsplash.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.vendor-background {
+  /* Relative path to the image from your CSS file */
+  background-image: url('/voska-studio-x-Naj1xzTj4-unsplash.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.inspo-background {
+  /* Relative path to the image from your CSS file */
+  background-image: url('/francesca-grima-Nyo9-_Uy5PY-unsplash.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.food-background {
+  /* Relative path to the image from your CSS file */
+  background-image: url('/bruno-ngarukiye-fJbpoLw1YYM-unsplash.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.drinks-background {
+  /* Relative path to the image from your CSS file */
+  background-image: url('/matthieu-joannon-6ciLddToTgM-unsplash.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.deco-background {
+  /* Relative path to the image from your CSS file */
+  background-image: url('/christina-victoria-craft-xpIv5g64igM-unsplash.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Reacgt Dya Picker properties (can lso be added to daypicker calendar file instead): */
+
+/*.rdp-root {
+  --rdp-day: green;
+  --rdp-accent-color: indigo; 
+  --rdp-accent-background-color: #f0f0f0; 
+  --rdp-day-height: 8rem;
+  --rdp-day-width: 8rem;
+}
+*/
+
+
 
 @layer base {
   * {

@@ -1,9 +1,26 @@
+//layout.tsx = the root layout/outer shell Next.js wraps every page in
+
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Figtree } from "next/font/google";
+import { Geist, Geist_Mono, Figtree, Aboreto, Arapey } from "next/font/google";
+import "react-day-picker/style.css";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { Nav } from "@/components/ui/nav";
+
 
 const figtree = Figtree({subsets:['latin'],variable:'--font-sans'});
+
+const aboreto = Aboreto({
+  subsets: ['latin'],
+  variable: "--font-aboreto",
+  weight: '400'
+});
+
+const arapey = Arapey({
+  subsets: ['latin'],
+  variable: "--font-arapey",
+  weight: '400'
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,11 +43,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", figtree.variable)}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" className="h-full">
+    <body 
+        className={`${aboreto.variable} ${geistSans.variable} ${geistMono.variable} ${figtree.variable} ${cn(
+          "min-h-full flex flex-col antialiased"
+        )}`} 
+      > 
+        <Nav /> 
+         <main className="flex-1 flex flex-col">{children}</main> 
+        </body>
     </html>
   );
 }

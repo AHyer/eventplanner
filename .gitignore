@@ -23,6 +23,8 @@
 # misc
 .DS_Store
 *.pem
+epics.csv
+tickets.csv
 
 # debug
 npm-debug.log*
