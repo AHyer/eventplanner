@@ -6,3 +6,6 @@ export default function InspoPage() {  // function = component ;  returns UI ele
     </div>
   );
 }
+
+//goals: scrape user-chosen decor images from web and/or Pinterest
+//incorporate AI to suggest decor suggest decor and/or places to buy it based on user-supplied data about the events and it's guests

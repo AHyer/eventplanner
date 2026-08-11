@@ -6,3 +6,6 @@ export default function VendorPage() {  // function = component ;  returns UI el
     </div>
   );
 }
+
+//goals: scrape local vendor ratings & contact info from web
+//incorporate AI to suggest vendors based on user-supplied data about the events and it's guests

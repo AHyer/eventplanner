@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+/* @import "react-day-picker/style.css"; */
 
 @custom-variant dark (&:is(.dark *));
 
@@ -228,12 +229,16 @@
   width: 100%;
 }
 
-.rdp-root {
-  --rdp-accent-color: indigo; /* Change the accent color to indigo. */
-  --rdp-accent-background-color: #f0f0f0; /* Change the accent background color. */
-  --rdp-day-height: 65px;
-  --rdp-day-width: 65px;
+/* Reacgt Dya Picker properties (can lso be added to daypicker calendar file instead): */
+
+/*.rdp-root {
+  --rdp-day: green;
+  --rdp-accent-color: indigo; 
+  --rdp-accent-background-color: #f0f0f0; 
+  --rdp-day-height: 8rem;
+  --rdp-day-width: 8rem;
 }
+*/
 
 
 

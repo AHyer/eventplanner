@@ -6,3 +6,6 @@ export default function FoodPage() {  // function = component ;  returns UI elem
     </div>
   );
 }
+
+//goal: scrape user-chosen recipes & images from web and/or recipe saving sites
+//incorporate AI to suggest recipes/menus based on user-supplied data about the events and it's guests

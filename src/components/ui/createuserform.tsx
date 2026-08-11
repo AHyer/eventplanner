@@ -10,7 +10,7 @@ export default function CreateUserForm() {
 
   return (
     <div style={{ maxWidth: '400px', margin: '40px auto', fontFamily: 'sans-serif' }}>
-      <h2>Next.js + Drizzle Form</h2>
+      <h2>Next.js + Drizzle New User Form</h2>
       
       <form action={formAction}>
         <div style={{ marginBottom: '15px' }}>

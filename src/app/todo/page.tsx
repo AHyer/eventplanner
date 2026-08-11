@@ -6,3 +6,6 @@ export default function TodoPage() {  // function = component ;  returns UI elem
     </div>
   );
 }
+
+
+//incorporate AI to suggest tasks based on user-supplied data about the events and it's guests
