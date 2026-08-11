@@ -1,10 +1,12 @@
 // components/nav.tsx
+//nav bar shows at top of all pages
 import Link from "next/link";
 
 export function Nav() {
   return (
     <header className="border-b px-10 py-4 flex gap-18 text-2xl font-bold font-aboreto justify-center items-center">
-      <Link href="/">Plan</Link>
+      <Link href="/">Home</Link>
+      <Link href="/plan">Plan</Link>
       <Link href="/events">Events</Link>
       <Link href="/calendar">Schedule</Link>
       <Link href="/invitations">Invite</Link>

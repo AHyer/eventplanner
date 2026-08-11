@@ -1,8 +1,10 @@
-export default function DecoPage() {  // function = component ;  returns UI elements
+//questinnaire goes here
+
+export default function PlanPage() {  // function = component ;  returns UI elements
   return (
     // <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
     <div>
-      <main className="deco-background flex flex-1 w-full flex-col items-center justify-between py-66 px-16 bg-white dark:bg-black "> </main>
+      <main className="hero-background flex flex-1 w-full flex-col items-center justify-between py-66 px-16 bg-white dark:bg-black "> </main>
     </div>
   );
 }

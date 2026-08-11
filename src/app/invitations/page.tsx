@@ -6,3 +6,6 @@ export default function InvitePage() {  // function = component ;  returns UI el
     </div>
   );
 }
+
+//goals: scrape user-chosen invitation images from web and/or Pinterest
+//incorporate AI to suggest decor suggest invitations, places to buy them, or create an invite based on user-supplied data about the events and it's guests

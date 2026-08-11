@@ -6,3 +6,6 @@ export default function DrinksPage() {  // function = component ;  returns UI el
     </div>
   );
 }
+
+//goals: scrape user-chosen drink recipes & images from web and/or recipe saving sites
+//incorporate AI to suggest drinks based on user-supplied data about the events and it's guests

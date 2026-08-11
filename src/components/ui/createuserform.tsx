@@ -3,14 +3,14 @@
 import { useActionState } from 'react';
 import {createUser} from './createuser';
 
-const initialState = { success: null, message: '' };
+const initialState = { success: false, message: '' };
 
 export default function CreateUserForm() {
   const [state, formAction, isPending] = useActionState(createUser, initialState);
 
   return (
     <div style={{ maxWidth: '400px', margin: '40px auto', fontFamily: 'sans-serif' }}>
-      <h2>Next.js + Drizzle Form</h2>
+      <h2>Next.js + Drizzle New User Form</h2>
       
       <form action={formAction}>
         <div style={{ marginBottom: '15px' }}>

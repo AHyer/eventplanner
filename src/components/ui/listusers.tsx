@@ -11,7 +11,7 @@ export default async function ListUsers() {
       <ul className="space-y-2">
         {allUsers.map((user) => (
           <li key={user.id} className="p-3 border rounded shadow-sm">
-            <p className="font-semibold">{user.name}</p>
+            <p className="font-semibold">{user.username}</p>
             <p className="text-sm text-gray-500">{user.email}</p>
             <p className="text-sm text-gray-500">{user.role}</p>
           </li>
