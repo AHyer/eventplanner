@@ -4,8 +4,8 @@ import Link from "next/link";
 
 export function Nav() {
   return (
-    <header className="border-b px-10 py-4 flex gap-18 text-2xl font-bold font-aboreto justify-center items-center">
-      <Link href="/">Home</Link>
+    <header className="border-b px-10 py-4 flex flex-wrap gap-4 md:gap-18 text-2xl font-bold font-aboreto justify-center items-center">
+     
       <Link href="/plan">Plan</Link>
       <Link href="/events">Events</Link>
       <Link href="/calendar">Schedule</Link>
@@ -21,3 +21,5 @@ export function Nav() {
     
   );
 }
+
+//nav bar links stack on mobile

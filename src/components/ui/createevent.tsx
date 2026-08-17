@@ -1,11 +1,13 @@
 //eventplanner/src/components/ui/createevent.tsx
 
+//collects event info from user form to be inserted to DB
+
 'use server';
 
 import { db } from '@/db';
 import { events } from '@/db/schema';
 
-const CURRENT_USER_ID = 1;  //debug
+const CURRENT_USER_ID = 1;  //debug (until auth is implemented)
 
 interface CreateEventInputs {
   eventName: string;
@@ -46,7 +48,7 @@ export async function createEvent(prevState: unknown, formData: FormData): Promi
   try {
     // Type-safe insert query using Drizzle ORM
     await db.insert(events).values({
-      user_id: CURRENT_USER_ID,
+      userId: CURRENT_USER_ID,
       eventName: inputs.eventName,
       eventDate: inputs.eventDate,
       eventVenue: inputs.eventVenue,

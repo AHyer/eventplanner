@@ -20,3 +20,6 @@ export default async function ListUsers() {
     </main>
   );
 }
+
+//TODO make user directory only visible to host (or other specific roles)
+//TODO hide user list on mobile unless requested

@@ -11,7 +11,6 @@ export default function CreateEventForm() {
   const [state, formAction, isPending] = useActionState(createEvent, initialState);
 
   return (
-    //<div style={{ maxWidth: '1200px', fontFamily: 'serif', justifyContent: 'left' }}>
     <div className="w-full max-w-2xl '1200px', fontFamily: 'serif', justifyContent: 'left' ">
       <h2 >Create A New Event</h2>
       

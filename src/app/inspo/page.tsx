@@ -7,5 +7,7 @@ export default function InspoPage() {  // function = component ;  returns UI ele
   );
 }
 
-//goals: scrape user-chosen decor images from web and/or Pinterest
+//TODO connect user's Pinterest board(s) through API to display on this page
+
+//goals: feed user-chosen decor images from web and/or Pinterest
 //incorporate AI to suggest decor suggest decor and/or places to buy it based on user-supplied data about the events and it's guests
