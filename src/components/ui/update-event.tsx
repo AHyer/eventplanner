@@ -1,3 +1,5 @@
+// src/components/ui/update-event.tsx
+
 'use server';
 import { db } from '@/db';
 import { events } from '@/db/schema';
@@ -26,7 +28,7 @@ export async function updateEvent(
 
   try {
     await db
-      .update(events)
+      .update(events) //server updates DB
       .set({
         eventName,
         eventDate: eventDate || undefined,
@@ -36,7 +38,7 @@ export async function updateEvent(
       })
       .where(eq(events.id, id));
 
-    revalidatePath('/events');
+    revalidatePath('/events');  //prevents stale version from being served
     return { success: true, message: 'Event updated!' };
   } catch (error) {
     console.error('Update error:', error);

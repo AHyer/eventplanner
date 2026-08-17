@@ -56,7 +56,7 @@ export const events = pgTable("events", {
 
 export const event_guest_profile = pgTable("event_guest_profile", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "g_profile_id_identity_seq" }), 
-  eventId: integer("event_id").notNull().references(() => events.id),
+  eventId: integer("event_id").notNull().references(() => events.id, {onDelete: 'cascade' }), //FK -- delete associated data when evetn is deleted
   profileGender: varchar("profile_gender"), //TODO make enum
   profileEducationMin: varchar("profile_education_min"),  //TODO make enum
   profileEducationMax: varchar("profile_education_max"),  //TODO make enum
@@ -80,7 +80,7 @@ export const vendors = pgTable("vendors", {
 
 export const guests = pgTable("guests", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "guests_id_identity_seq" }), 
-  eventId: integer("event_id").notNull().references(() => events.id),
+  eventId: integer("event_id").notNull().references(() => events.id, {onDelete: 'cascade' }),
   guestName: varchar("guest_name"),
   guestPhone: text("guest_phone"),
   guestEmail: text("guest_email"),
@@ -93,7 +93,7 @@ export const guests = pgTable("guests", {
 
 export const tasks = pgTable("tasks", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "tasks_id_identity_seq" }), 
-  eventId: integer("eventId").notNull().references(() => events.id),
+  eventId: integer("eventId").notNull().references(() => events.id, {onDelete: 'cascade' }),
   eventName: varchar("name").notNull(),
   dueDate: timestamp("due_date"),
   taskStatus: taskStatusEnum("task_status"), 
@@ -103,7 +103,7 @@ export const tasks = pgTable("tasks", {
 
 export const notes = pgTable("notes", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "notes_id_identity_seq" }), 
-  eventId: integer("event_id").notNull().references(() => events.id),
+  eventId: integer("event_id").notNull().references(() => events.id, {onDelete: 'cascade' }),
   name: varchar("name").notNull(),
   body: text("body"),
   noteStatus: noteStatusEnum("note_status"),  
@@ -114,7 +114,7 @@ export const notes = pgTable("notes", {
 export const menu = pgTable("menu", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "menu_id_identity_seq" }), 
   vendorId: varchar("vendor_id"),
-  eventId: integer("event_id").notNull().references(() => events.id),
+  eventId: integer("event_id").notNull().references(() => events.id, {onDelete: 'cascade' }),
   menuDescr: varchar("menu_descr"),
   menuStatus: menuStatusEnum("menu_status"),  
   createdAt: timestamp("created_at").defaultNow().notNull(), 
@@ -123,7 +123,7 @@ export const menu = pgTable("menu", {
 export const deco = pgTable("deco", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "deco_id_identity_seq" }), 
   vendorId: varchar("vendor_id"),
-  eventId: integer("event_id").notNull().references(() => events.id),
+  eventId: integer("event_id").notNull().references(() => events.id, {onDelete: 'cascade' }),
   decoDescr: varchar("deco_descr"),
   decoStatus: decoStatusEnum("deco_status"),  
   createdAt: timestamp("created_at").defaultNow().notNull(), 
@@ -138,6 +138,7 @@ export const drink_menu = pgTable("drink_menu", {
   created_at: timestamp("created_at").defaultNow().notNull(), 
 });
 
+//TODO food and drink recipes should persist even if not associated with an event (for re-use)
 export const drink_recipe = pgTable("drink_recipe", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "drink_recipe_id_identity_seq" }), 
   drinkMenuId: integer("drink_menu_id").notNull().notNull().notNull().references(() => drink_menu.id),
