@@ -57,7 +57,7 @@ export async function createEvent(prevState: unknown, formData: FormData): Promi
       numGuests: Number(inputs.numGuests)
     });
     
-    return { success: true, message: 'Event successfully saved via Drizzle!' };
+    return { success: true, message: 'Event successfully saved!' };
   } catch (error: any) {
     console.error('Drizzle execution error:', error);
     

@@ -1,6 +1,10 @@
+// src/components/ui/edit-event-form.tsx
+//edit or delete a specific event chosen from the event list by event id
+
 'use client';
 import { useActionState } from 'react';
 import { updateEvent } from '@/components/ui/update-event';
+import { deleteEvent } from '@/components/ui/delete-event';
 import type { events } from '@/db/schema';
 
 type Event = typeof events.$inferSelect;
@@ -23,7 +27,7 @@ export function EditEventForm({ event }: { event: Event }) {
           type="text"
           id="event_name"
           name="event_name"
-          defaultValue={event.eventName ?? ''}
+          defaultValue={event.eventName ?? ''} //defaultValue pre-fills the field while still letting the user type over it normally; value alone (without onChange) would make it read-only/frozen
           className="w-full border border-slate-300 rounded-md px-4 py-3"
           required
         />
@@ -88,12 +92,13 @@ export function EditEventForm({ event }: { event: Event }) {
         type="submit"
         disabled={isPending}
         style={{
-          padding: '15px 15px',
+          padding: '15px',
           backgroundColor: '#bd83b0',
           color: '#fff',
           border: 'none',
           borderRadius: '6px',
           cursor: 'pointer',
+          marginBottom: '10px',
         }}
       >
         {isPending ? 'Saving...' : 'Save Changes'}
@@ -105,5 +110,28 @@ export function EditEventForm({ event }: { event: Event }) {
         </p>
       )}
     </form>
+  );
+}
+
+export function DeleteEventButton({ id }: { id: number }) {
+  return (
+    <button
+      onClick={() => {
+        if (confirm('Delete this event? This cannot be undone.')) {
+          deleteEvent(id);
+        }
+      }}
+      style={{
+        padding: '15px 20px',
+        backgroundColor: '#aa126d',
+        color: '#fff',
+        border: 'none',
+        borderRadius: '6px',
+        cursor: 'pointer',
+        //marginLeft: '0px',
+      }}
+    >
+      Delete Event
+    </button>
   );
 }
