@@ -1,15 +1,15 @@
 import { relations } from "drizzle-orm/relations";
-import { events, notes, tasks } from "./schema";
+import { events, notes, tasks } from "../src/db/schema";
 
 export const notesRelations = relations(notes, ({one}) => ({
 	event: one(events, {
 		fields: [notes.eventId],
 		references: [events.id]
 	}),
-	task: one(tasks, {
-		fields: [notes.taskId],
-		references: [tasks.id]
-	}),
+	// task: one(tasks, {
+	// 	fields: [notes.taskId],
+	// 	references: [tasks.id]
+	// }),
 }));
 
 export const eventsRelations = relations(events, ({many}) => ({
