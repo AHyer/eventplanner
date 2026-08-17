@@ -19,7 +19,7 @@ export default function CalendarPage() {
         mode="single"
         selected={date}
         onSelect={setDate}
-        className="text-3xl rounded-md border shadow"
+        className="text-3xl py-16 px-16  mt-4 rounded-md border shadow"
       />
       
       {date && (

@@ -19,6 +19,8 @@ export function Calendar(props: DayPickerProps) {
         '--rdp-day-height': '8rem',
         '--rdp-day_button-width': '3.25rem',
         '--rdp-day_button-height': '3.25rem',
+        '--rdp-caption_label': '3.25rem',
+
         ...props.style,
       } as React.CSSProperties}
       // classNames={{

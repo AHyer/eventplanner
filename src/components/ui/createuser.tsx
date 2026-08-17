@@ -3,10 +3,12 @@
 import { db } from '@/db';
 import { users } from '@/db/schema';
 
+type UserRole = 'host' | 'vendor' | 'guest';
+
 interface CreateUserInputs {
   name: string;
   email: string;
-  role: string | null;
+  role: UserRole | null;
 }
 
 interface CreateUserResult {
@@ -17,16 +19,16 @@ interface CreateUserResult {
 export async function createUser(prevState: unknown, formData: FormData): Promise<CreateUserResult> {
   const name = formData.get('name') as string | null;
   const email = formData.get('email') as string | null;
-  const role = formData.get('role') as string | null;
+  const role = formData.get('role') as UserRole | null;
 
   const inputs: CreateUserInputs = {
     name: name ?? '',
     email: email ?? '',
-    role
+    role,
   };
 
   // Basic validation
-  if (!inputs.name || !inputs.email) {
+  if (!inputs.name || !inputs.email || !inputs.role) {
     return { success: false, message: 'All fields are required.' };
   }
 
@@ -35,10 +37,10 @@ export async function createUser(prevState: unknown, formData: FormData): Promis
     await db.insert(users).values({
       username: inputs.name,
       email: inputs.email,
-      role: inputs.role
+      role: inputs.role ?? undefined
     });
     
-    return { success: true, message: 'User successfully saved via Drizzle!' };
+    return { success: true, message: 'User successfully saved!' };
   } catch (error: any) {
     console.error('Drizzle execution error:', error);
     
@@ -50,4 +52,6 @@ export async function createUser(prevState: unknown, formData: FormData): Promis
     return { success: false, message: 'An internal error occurred.' };
   }
 }
+
+//TODO sign in vs. create new user
  

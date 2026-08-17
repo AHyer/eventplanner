@@ -1,10 +1,15 @@
-//questinnaire goes here
+//eventplanner/src/app/plan/page.tsx
+//questionnaire goes here
+
+import QuestionnaireForm from "../../components/ui/questionnaireform";
+
 
 export default function PlanPage() {  // function = component ;  returns UI elements
   return (
-    // <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-    <div>
-      <main className="hero-background flex flex-1 w-full flex-col items-center justify-between py-66 px-16 bg-white dark:bg-black "> </main>
+    <div className="flex flex-col md:flex-row w-full min-h-screen">
+      <main className="events-background font-aboreto font-bold flex flex-1 w-full flex-col items-stretch justify-start py-16 md:py-66 px-16 bg-white dark:bg-black " >
+      <QuestionnaireForm/>
+       </main>
     </div>
   );
 }
