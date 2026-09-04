@@ -6,7 +6,7 @@
 
 import { db } from '@/db';
 import { events } from '@/db/schema';
-import { event_guest_profile } from '@/db/schema';
+import { event_guests_profile } from '@/db/schema';
 // import { guests } from '@/db/schema';
 // import { tasks } from '@/db/schema';
 // import { notes } from '@/db/schema';
@@ -35,8 +35,8 @@ interface QuestionnaireInputs {
     profileEducationMax?:  string;
     profileMaxAge?:  string;
     profileMinAge?:  string;
-    guestFoodAllergies?:  string;
-    guestProfileDesc?:   string;
+    guestsDietaryRestrictions?:  string;
+    guestsProfileDesc?:   string;
 }
 
 interface QuestionnaireResult {
@@ -68,8 +68,8 @@ const inputs: QuestionnaireInputs = {         //everything the user enters for t
     profileEducationMax:  (formData.get('profile_education_max') as string) || undefined,
     profileMaxAge:  (formData.get('profile_max_age') as string) || undefined,
     profileMinAge:  (formData.get('profile_min_age') as string) || undefined,
-    guestFoodAllergies:  (formData.get('guest_food_allergies') as string) || undefined,
-    guestProfileDesc:   (formData.get('guest_profile_desc') as string) || undefined,
+    guestsDietaryRestrictions:  (formData.get('profile_guests_dietary_restrictions') as string) || undefined,
+    guestsProfileDesc:   (formData.get('guests_profile_desc') as string) || undefined,
 };
 
 if (!inputs.eventName) {
@@ -96,11 +96,11 @@ if (!inputs.eventName) {
           alcoholServed: inputs.alcoholServed ? inputs.alcoholServed === 'true' : undefined,
           venueZipCode: inputs.venueZipCode || undefined,
           eventVibe:  inputs.eventVibe || undefined,
-          totalBudgetMax: inputs.totalBudgetMax|| undefined,
-          totalBudgetMin: inputs.totalBudgetMin || undefined,
+          totalBudgetMax: inputs.totalBudgetMax as typeof events.totalBudgetMax.enumValues[number] | undefined,
+          totalBudgetMin: inputs.totalBudgetMin as typeof events.totalBudgetMin.enumValues[number] | undefined,
           guestsMaxNum: inputs.guestsMaxNum ? Number(inputs.guestsMaxNum) : undefined,
           guestsMinNum: inputs.guestsMinNum ? Number(inputs.guestsMinNum) : undefined,
-          hostLaborPortion:  inputs.hostLaborPortion || undefined,
+          hostLaborPortion:  inputs.hostLaborPortion as typeof events.hostLaborPortion.enumValues[number] | undefined,
           hostHelpers: inputs.hostHelpers ? Number(inputs.hostHelpers) : undefined,
           hireOutTasks: inputs.hireOutTasks as typeof events.hireOutTasks.enumValues[number] | undefined,
           idealEventDesc: inputs.idealEventDesc || undefined,
@@ -108,25 +108,24 @@ if (!inputs.eventName) {
         })
         .returning({ id: events.id });
 
-      // Guest profile: only insert if the host answered at least one
-      // guest-profile question — otherwise skip it entirely
+      // Guest profile: only insert if the host answered at least one guest-profile question — otherwise skip it entirely
       const hasGuestProfileData = 
         inputs.profileEducationMin ||
         inputs.profileEducationMax ||
         inputs.profileMaxAge ||
         inputs.profileMinAge ||
-        inputs.guestFoodAllergies ||
-        inputs.guestProfileDesc;
+        inputs.guestsDietaryRestrictions ||
+        inputs.guestsProfileDesc;
 
       if (hasGuestProfileData) {
-        await tx.insert(event_guest_profile).values({
+        await tx.insert(event_guests_profile).values({
           eventId: newEvent.id,
-          profileEducationMin: inputs.profileEducationMin || undefined,
-          profileEducationMax: inputs.profileEducationMax || undefined,
-          profileMaxAge: inputs.profileMaxAge ? Number(inputs.profileMaxAge) : undefined,
-          profileMinAge: inputs.profileMinAge ? Number(inputs.profileMinAge) : undefined,
-          guestFoodAllergies: inputs.guestFoodAllergies || undefined,
-          guestProfileDesc: inputs.guestProfileDesc || undefined,
+          profileEducationMin: inputs.profileEducationMin as typeof event_guests_profile.profileEducationMin.enumValues[number] | undefined,
+          profileEducationMax: inputs.profileEducationMax as typeof event_guests_profile.profileEducationMax.enumValues[number] | undefined,
+          profileMaxAge: inputs.profileMaxAge as typeof event_guests_profile.profileMaxAge.enumValues[number] | undefined,
+          profileMinAge: inputs.profileMinAge as typeof event_guests_profile.profileMinAge.enumValues[number] | undefined,
+          guestsDietaryRestrictions: inputs.guestsDietaryRestrictions as typeof event_guests_profile.guestsDietaryRestrictions.enumValues[number] | undefined,
+          guestsProfileDesc: inputs.guestsProfileDesc || undefined,
         });
       }
 

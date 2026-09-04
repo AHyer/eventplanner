@@ -33,8 +33,8 @@ export async function updateEvent(
         eventName,
         eventDate: eventDate || undefined,
         eventVenue: eventVenue || undefined,
-        totalBudgetMin: totalBudgetMin || undefined,
-        totalBudgetMax: totalBudgetMax || undefined,
+        totalBudgetMin: (totalBudgetMin || undefined) as typeof events.totalBudgetMin.enumValues[number] | undefined,
+        totalBudgetMax: (totalBudgetMax || undefined) as typeof events.totalBudgetMax.enumValues[number] | undefined,
       })
       .where(eq(events.id, id));
 
@@ -47,5 +47,5 @@ export async function updateEvent(
 }
 
 // Notes
-// total_budget_min/total_budget_max are decimal columns in your schema, so Drizzle expects strings — the raw formData.get() string is passed through as-is, no Number() conversion needed (same as your questionnaire form).
+// total_budget_min/total_budget_max are budget_amount enum columns, so the form value has to be one of budgetAmountEnum's breakpoints ("500", "1000", ... "100000_plus") — the number inputs in edit-event-form.tsx still need to become <select>s.
 // If clicking through reveals other core fields you want editable (outside/alcoholServed booleans, eventVibe, etc.), the pattern extends the same way: add the input with defaultValue={event.field ?? ''}, add the read in update-event.ts, add it to the .set({...}) object.
