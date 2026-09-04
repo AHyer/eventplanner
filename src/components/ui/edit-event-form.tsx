@@ -5,6 +5,8 @@
 import { useActionState } from 'react';
 import { updateEvent } from '@/components/ui/update-event';
 import { deleteEvent } from '@/components/ui/delete-event';
+import { EnumSelect } from '@/components/ui/enum-select';
+import { budgetAmountOptions } from '@/components/ui/enum-options';
 import type { events } from '@/db/schema';
 
 type Event = typeof events.$inferSelect;
@@ -59,33 +61,23 @@ export function EditEventForm({ event }: { event: Event }) {
         />
       </div>
 
+      {/* budget is a budget_amount enum column now, so these have to be dropdowns —
+          a free-typed number would fail the insert */}
       <div style={{ display: 'flex', gap: '15px', marginBottom: '15px' }}>
-        <div style={{ flex: 1 }}>
-          <label htmlFor="total_budget_min" style={{ display: 'block', marginBottom: '5px' }}>
-            Budget Min:
-          </label>
-          <input
-            type="number"
-            step="0.01"
-            id="total_budget_min"
-            name="total_budget_min"
-            defaultValue={event.totalBudgetMin ?? ''}
-            className="w-full border border-slate-300 rounded-md px-4 py-3"
-          />
-        </div>
-        <div style={{ flex: 1 }}>
-          <label htmlFor="total_budget_max" style={{ display: 'block', marginBottom: '5px' }}>
-            Budget Max:
-          </label>
-          <input
-            type="number"
-            step="0.01"
-            id="total_budget_max"
-            name="total_budget_max"
-            defaultValue={event.totalBudgetMax ?? ''}
-            className="w-full border border-slate-300 rounded-md px-4 py-3"
-          />
-        </div>
+        <EnumSelect
+          name="total_budget_min"
+          label="Budget Min:"
+          options={budgetAmountOptions}
+          defaultValue={event.totalBudgetMin}
+          className="flex-1"
+        />
+        <EnumSelect
+          name="total_budget_max"
+          label="Budget Max:"
+          options={budgetAmountOptions}
+          defaultValue={event.totalBudgetMax}
+          className="flex-1"
+        />
       </div>
 
       <button

@@ -4,6 +4,15 @@
 
 import { useActionState } from 'react';
 import {questionnaire} from './questionnaire';
+import { EnumSelect } from './enum-select';
+import {
+  budgetAmountOptions,
+  hostLaborPortionOptions,
+  ageBracketOptions,
+  educationLevelOptions,
+  dietaryRestrictionOptions,
+  hireOutTasksOptions,
+} from './enum-options';
 
 const initialState = { success: false, message: '' };
 
@@ -56,20 +65,65 @@ export default function QuestionnaireForm() {
           />
         </div>
 
-        <div>
-          <label htmlFor="hire_out_tasks" style={{ paddingRight: '10px', display: 'block', marginBottom: '10px', marginRight: '10px' }}>Which event tasks would you like to hire out? 
-          <select
-            id="hire_out_tasks"
-            name="hire_out_tasks"
-            className="px-4 py-3 bg-white border border-slate-300 rounded-md shadow-sm" >
-            <option value="">— Select —</option>
-            <option value="catering">catering</option>
-            <option value="setup">setup</option>
-            <option value="pre-cleaning">pre-cleaning</option>
-            <option value="post-cleaning">post-cleaning</option>
-          </select>
-          </label>
-        </div>
+        {/* every field below writes to an enum column, so they are all dropdowns —
+            the blank option means "not answered" and leaves the column null */}
+        <EnumSelect
+          name="total_budget_min"
+          label="At a minimum, what do you expect to spend on your event?"
+          options={budgetAmountOptions}
+        />
+
+        <EnumSelect
+          name="total_budget_max"
+          label="What is the most you are willing to spend?"
+          options={budgetAmountOptions}
+        />
+
+        <EnumSelect
+          name="host_labor_portion"
+          label="How much of the work do you want to do yourself?"
+          options={hostLaborPortionOptions}
+        />
+
+        <EnumSelect
+          name="hire_out_tasks"
+          label="Which event tasks would you like to hire out?"
+          options={hireOutTasksOptions}
+        />
+
+        <h3 className="text-xl font-aboreto font-bold leading-8 text-zinc-600 dark:text-zinc-400" style={{ marginTop: '25px', marginBottom: '10px' }}>
+          ...and about your guests
+        </h3>
+
+        <EnumSelect
+          name="profile_min_age"
+          label="What is the youngest age group you expect among your guests?"
+          options={ageBracketOptions}
+        />
+
+        <EnumSelect
+          name="profile_max_age"
+          label="And the oldest age group?"
+          options={ageBracketOptions}
+        />
+
+        <EnumSelect
+          name="profile_education_min"
+          label="What is the least amount of schooling your guests are likely to have?"
+          options={educationLevelOptions}
+        />
+
+        <EnumSelect
+          name="profile_education_max"
+          label="And the most?"
+          options={educationLevelOptions}
+        />
+
+        <EnumSelect
+          name="profile_guests_dietary_restrictions"
+          label="Do your guests have a dietary restriction to plan around?"
+          options={dietaryRestrictionOptions}
+        />
 
         <button 
           type="submit" 

@@ -17,8 +17,16 @@ export const mainDishStatusEnum = pgEnum("main_dish_status", ["considering", "us
 export const sideDishStatusEnum = pgEnum("side_dish_status", ["considering", "using", "archived"]);
 export const dessertStatusEnum = pgEnum("dessert_status", ["considering", "using", "archived"]);
 export const decoGroupStatusEnum = pgEnum("deco_group_status", ["considering", "using", "archived"]);
+export const hireOutTasksEnum = pgEnum("hire_out_tasks", ["none", "catering", "setup", "pre-cleaning", "post-cleaning"]);
+//bucket enums: values are the breakpoint itself, pages map them to display labels ("2500" -> "$2,500")
+export const budgetAmountEnum = pgEnum("budget_amount", ["200", "500", "1000", "2500", "5000", "10000", "25000", "50000", "100000", "100000_plus"]);
+export const hostLaborPortionEnum = pgEnum("host_labor_portion", ["0", "25", "50", "75", "100"]); //percent of the labor the host does themselves
+export const ageBracketEnum = pgEnum("age_bracket", ["under_18", "18_24", "25_34", "35_44", "45_54", "55_64", "65_plus"]);
+//ordered low to high so min/max comparisons follow the enum order
+export const educationLevelEnum = pgEnum("education_level", ["less_than_high_school", "high_school", "some_college", "trade_school", "associates", "bachelors", "masters", "professional", "doctorate"]);
+export const profileGenderEnum = pgEnum("profile_gender", ["mixed", "mostly_women", "mostly_men", "all_women", "all_men", "unspecified"]); //describes the guest list as a whole, not one person
+export const dietaryRestrictionEnum = pgEnum("dietary_restriction", ["none", "gluten_free", "dairy_free", "nut_free", "shellfish_free", "vegetarian", "vegan", "pescatarian", "kosher", "halal", "other"]);
 
-export const hireOutTasksEnum = pgEnum("hire_out_tasks", ["catering", "setup", "pre-cleaning", "post-cleaning"]);
 
 export const users = pgTable("users", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "users_id_identity_seq" }), 
@@ -41,29 +49,30 @@ export const events = pgTable("events", {
   venueAddress: varchar("venue_address"),
   venueZipCode: varchar("venue_zip"), //validate
   eventVibe: text("event_vibe"),
-  totalBudgetMax: decimal("total_budget_max", { precision: 10, scale: 2 }),  //TODO make enum
-  totalBudgetMin: decimal("total_budget_min", { precision: 10, scale: 2 }),
+  totalBudgetMax: budgetAmountEnum("total_budget_max"),
+  totalBudgetMin: budgetAmountEnum("total_budget_min"),
   numGuests: integer("num_guests"),
   guestsMaxNum: integer("max_num_guests"),  
   guestsMinNum: integer("min_num_guests"),
-  hostLaborPortion: decimal("host_labor_portion", { precision: 5, scale: 2 }), //percentage //TODO make enum
+  hostLaborPortion: hostLaborPortionEnum("host_labor_portion"), //percentage
   hostHelpers: integer("host_helpers"),
   hireOutTasks: hireOutTasksEnum("hire_out_tasks"),
   idealEventDesc: text("ideal_event_desc"),
   eventStatus: eventStatusEnum("event_status"), 
   createdAt: timestamp("created_at").defaultNow().notNull(), 
+
 });
 
-export const event_guest_profile = pgTable("event_guest_profile", {
+export const event_guests_profile = pgTable("event_guests_profile", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "g_profile_id_identity_seq" }), 
   eventId: integer("event_id").notNull().references(() => events.id, {onDelete: 'cascade' }), //FK -- delete associated data when evetn is deleted
-  profileGender: varchar("profile_gender"), //TODO make enum
-  profileEducationMin: varchar("profile_education_min"),  //TODO make enum
-  profileEducationMax: varchar("profile_education_max"),  //TODO make enum
-  profileMaxAge: integer("profile_max_age"),  //TODO make enum
-  profileMinAge: integer("profile_min_age"),  //TODO make enum
-  guestFoodAllergies: text("guest_food_allergies"), //TODO make enum
-  guestProfileDesc:  text("guest_profile_desc"),
+  profileGender: profileGenderEnum("profile_gender"),
+  profileEducationMin: educationLevelEnum("profile_education_min"),
+  profileEducationMax: educationLevelEnum("profile_education_max"),
+  profileMaxAge: ageBracketEnum("profile_max_age"),
+  profileMinAge: ageBracketEnum("profile_min_age"),
+  guestsDietaryRestrictions: dietaryRestrictionEnum("profile_guests_dietary_restrictions"),
+  guestsProfileDesc:  text("guests_profile_desc"),
   createdAt: timestamp("created_at").defaultNow().notNull(), 
 });
 
@@ -85,7 +94,7 @@ export const guests = pgTable("guests", {
   guestPhone: text("guest_phone"),
   guestEmail: text("guest_email"),
   guestAddress: text("guest_address"),
-  guestFoodIssues: text("food_issues"), //TODO make enum
+  guestDietaryRestrictions: dietaryRestrictionEnum("dietary_restrictions"),
   guestStatus: guestStatusEnum("guest_status"), 
   totalCostPerGuest: decimal("total_cost_per_guest", { precision: 10, scale: 2 }),
   createdAt: timestamp("created_at").defaultNow().notNull(), 
@@ -171,7 +180,7 @@ export const dessert = pgTable("dessert", {
   menuId: integer("menu_id").notNull().notNull().references(() => menu.id),
   dessertRecipeDescr: varchar("dessert_recipe_descr"),
   dessertIngredients: text("dessert_ingredients"),
-  dessertStatus: dessertStatusEnum("dessert_status"),  //TODO make enum
+  dessertStatus: dessertStatusEnum("dessert_status"),
   createdAt: timestamp("created_at").defaultNow().notNull(), 
 });
 
@@ -180,6 +189,6 @@ export const deco_group = pgTable("deco_group", {
   decoId: integer("deco_id").notNull().notNull().references(() => deco.id),
   decoGroupDescr: varchar("deco_group_descr"),
   decoGroupArea: varchar("deco_group_area"),
-  decoGroupStatus: decoGroupStatusEnum("deco_grooup_status"),  //TODO make enum
+  decoGroupStatus: decoGroupStatusEnum("deco_grooup_status"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
