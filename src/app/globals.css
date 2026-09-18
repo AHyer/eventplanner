@@ -3,8 +3,8 @@
 @import "shadcn/tailwind.css";
 /* @import "react-day-picker/style.css"; */
 
-@custom-variant dark (&:is(.dark *));
-
+/* Tailwind CSS v4 provides the custom @theme at-rule. */
+/* stylelint-disable at-rule-no-unknown */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -169,6 +169,16 @@
   width: 100%;
 }
 
+.guests-background {
+  /* Relative path to the image from your CSS file */
+  background-image: url('/laura-adai-b4tv_YAOpUo-unsplash.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+}
+
 .todo-background {
   /* Relative path to the image from your CSS file */
   background-image: url('/jess-bailey-F5nV6DnCf3I-unsplash.jpg'); 
@@ -242,7 +252,7 @@
 
 
 
-@layer base {
+/* @layer base {
   * {
     @apply border-border outline-ring/50;
   }
@@ -252,4 +262,4 @@
   html {
     @apply font-sans;
   }
-}
+} */

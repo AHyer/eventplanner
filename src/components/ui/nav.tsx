@@ -10,6 +10,7 @@ export function Nav() {
       <Link href="/events">Events</Link>
       <Link href="/calendar">Schedule</Link>
       <Link href="/invitations">Invite</Link>
+      <Link href="/guests">Guests</Link>
       <Link href="/todo">To Do</Link>
       <Link href="/vendors">Vendors</Link>
       <Link href="/inspo">Inspire</Link>

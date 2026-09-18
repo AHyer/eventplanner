@@ -7,7 +7,9 @@
 import { db } from '@/db';
 import { events } from '@/db/schema';
 
-const CURRENT_USER_ID = 1;  //debug (until auth is implemented)
+const CURRENT_USER_ID = 1;  //TODO debug (until auth is implemented)
+
+//TODO should create event and edit event pages be merged into one?
 
 interface CreateEventInputs {
   eventName: string;
@@ -16,6 +18,8 @@ interface CreateEventInputs {
   venueAddress: string;
   eventVibe: string;
   numGuests: string;
+  outside: boolean;
+  alcoholServed: boolean;
 }
 
 interface CreateEventResult {
@@ -29,7 +33,9 @@ export async function createEvent(prevState: unknown, formData: FormData): Promi
   const eventvenue = formData.get('eventvenue') as string | null;
   const venueaddress = formData.get('venueaddress') as string | null;
   const eventvibe = formData.get('eventvibe') as string | null;
-  const numguests = formData.get('numGuests') as string | null;
+  const numguests = formData.get('numguests') as string | null;
+  const outside = formData.get('outside') as boolean | null;
+  const alcoholserved = formData.get('alcoholserved') as boolean | null;
 
   const inputs: CreateEventInputs = {
     eventName: eventname ?? '',
@@ -37,7 +43,10 @@ export async function createEvent(prevState: unknown, formData: FormData): Promi
     eventVenue: eventvenue ?? '',
     venueAddress: venueaddress ?? '',
     eventVibe: eventvibe ?? '',
-    numGuests: numguests ?? ''
+    numGuests: numguests ?? '',
+    //TODO alias bools as yes/no
+    outside: outside === true || outside === false,
+    alcoholServed: alcoholserved === true || alcoholserved === false
   };
 
   // Basic validation
@@ -49,12 +58,14 @@ export async function createEvent(prevState: unknown, formData: FormData): Promi
     // Type-safe insert query using Drizzle ORM
     await db.insert(events).values({
       userId: CURRENT_USER_ID,
-      eventName: inputs.eventName,
-      eventDate: inputs.eventDate,
-      eventVenue: inputs.eventVenue,
+      eventName: inputs.eventName,  //required for submission (others can be added later)
+      eventDate: inputs.eventDate,  
+      eventVenue: inputs.eventVenue,  
       venueAddress: inputs.venueAddress,
       eventVibe: inputs.eventVibe,
-      numGuests: Number(inputs.numGuests)
+      numGuests: Number(inputs.numGuests),
+      outside: Boolean(inputs.outside),
+      alcoholServed: Boolean(inputs.alcoholServed)
     });
     
     return { success: true, message: 'Event successfully saved!' };

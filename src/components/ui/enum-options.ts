@@ -12,6 +12,7 @@ import type {
   educationLevelEnum,
   dietaryRestrictionEnum,
   hireOutTasksEnum,
+  guestStatusEnum,
 } from '@/db/schema';
 
 export type EnumOption<T extends string> = { value: T; label: string };
@@ -76,6 +77,13 @@ export const dietaryRestrictionOptions: EnumOption<DietaryRestriction>[] = [
   { value: 'kosher', label: 'Kosher' },
   { value: 'halal', label: 'Halal' },
   { value: 'other', label: 'Other' },
+];
+
+type GuestStatus = (typeof guestStatusEnum)['enumValues'][number];
+export const guestStatusOptions: EnumOption<GuestStatus>[] = [
+  { value: 'invited', label: 'Invited — no reply yet' },
+  { value: 'accepted', label: 'Accepted' },
+  { value: 'declined', label: 'Declined' },
 ];
 
 type HireOutTask = (typeof hireOutTasksEnum)['enumValues'][number];

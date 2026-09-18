@@ -28,7 +28,7 @@ export const profileGenderEnum = pgEnum("profile_gender", ["mixed", "mostly_wome
 export const dietaryRestrictionEnum = pgEnum("dietary_restriction", ["none", "gluten_free", "dairy_free", "nut_free", "shellfish_free", "vegetarian", "vegan", "pescatarian", "kosher", "halal", "other"]);
 
 
-export const users = pgTable("users", {
+export const users = pgTable("users", { //strictly visible to host(s) users only
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "users_id_identity_seq" }), 
   username: varchar("username").notNull(),
   email: varchar("email").notNull(),
@@ -36,7 +36,12 @@ export const users = pgTable("users", {
   createdAt: timestamp("created_at").defaultNow().notNull(), 
 });
 
-export const events = pgTable("events", {
+//is a "primary" host source of truth needed if htere is more than one host?
+//is a "helper" role needed?
+//user directory should be visible to host(s) only
+
+
+export const events = pgTable("events", { //strictly visible to host(s) users only
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "events_id_identity_seq" }), 
   userId: integer("user_id").notNull().references(() => users.id),
   eventName: varchar("event_name"),
@@ -54,16 +59,19 @@ export const events = pgTable("events", {
   numGuests: integer("num_guests"),
   guestsMaxNum: integer("max_num_guests"),  
   guestsMinNum: integer("min_num_guests"),
+  //guestsAttending: integer //calculated from guest table > guest status
   hostLaborPortion: hostLaborPortionEnum("host_labor_portion"), //percentage
   hostHelpers: integer("host_helpers"),
   hireOutTasks: hireOutTasksEnum("hire_out_tasks"),
   idealEventDesc: text("ideal_event_desc"),
   eventStatus: eventStatusEnum("event_status"), 
   createdAt: timestamp("created_at").defaultNow().notNull(), 
-
 });
 
-export const event_guests_profile = pgTable("event_guests_profile", {
+//data could be anonymized and used to suggest event aspects
+//TODO restructure edit-event-form to an event dashboard page for each event showing main aspects of event (current number of guests RSVP'd, menu recipe titles, etc.)
+
+export const event_guests_profile = pgTable("event_guests_profile", { //strictly visible to host(s) users only
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "g_profile_id_identity_seq" }), 
   eventId: integer("event_id").notNull().references(() => events.id, {onDelete: 'cascade' }), //FK -- delete associated data when evetn is deleted
   profileGender: profileGenderEnum("profile_gender"),
@@ -76,6 +84,9 @@ export const event_guests_profile = pgTable("event_guests_profile", {
   createdAt: timestamp("created_at").defaultNow().notNull(), 
 });
 
+//data could be anonymized and used to suggest event aspects (food, drink, decor, music)
+
+
 export const vendors = pgTable("vendors", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "vendor_id_identity_seq" }), 
   vendorName: varchar("vendor_name"),
@@ -87,6 +98,9 @@ export const vendors = pgTable("vendors", {
   createdAt: timestamp("created_at").defaultNow().notNull(), 
 });
 
+//visible to host(s), vendor is visible to itself--should other vendor names be visible to other vendors?
+//vendor ads for purchase? (visible to guests)
+
 export const guests = pgTable("guests", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "guests_id_identity_seq" }), 
   eventId: integer("event_id").notNull().references(() => events.id, {onDelete: 'cascade' }),
@@ -96,9 +110,12 @@ export const guests = pgTable("guests", {
   guestAddress: text("guest_address"),
   guestDietaryRestrictions: dietaryRestrictionEnum("dietary_restrictions"),
   guestStatus: guestStatusEnum("guest_status"), 
-  totalCostPerGuest: decimal("total_cost_per_guest", { precision: 10, scale: 2 }),
+  totalCostPerGuest: decimal("total_cost_per_guest", { precision: 10, scale: 2 }),  //form budget vs. from aspects chosen
   createdAt: timestamp("created_at").defaultNow().notNull(), 
 });
+
+//let host(s) decide if guest names (or the guest list at all) should be visible to other guests; then allow each guest to decide of thier name shoul dbe visible to other guests
+//at minimum, total number of guests who will be attending will be visible to everyone
 
 export const tasks = pgTable("tasks", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "tasks_id_identity_seq" }), 
@@ -110,6 +127,9 @@ export const tasks = pgTable("tasks", {
   createdAt: timestamp("created_at").defaultNow().notNull(), 
 });
 
+//each host could have their own task list OR primary host creates list and shares/delegates
+//should vendors be able to create a task list?
+
 export const notes = pgTable("notes", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "notes_id_identity_seq" }), 
   eventId: integer("event_id").notNull().references(() => events.id, {onDelete: 'cascade' }),
@@ -120,6 +140,8 @@ export const notes = pgTable("notes", {
   createdAt: timestamp("created_at").defaultNow().notNull(), 
 });
 
+//each host and each vendor can have notes
+
 export const menu = pgTable("menu", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "menu_id_identity_seq" }), 
   vendorId: varchar("vendor_id"),
@@ -129,6 +151,8 @@ export const menu = pgTable("menu", {
   createdAt: timestamp("created_at").defaultNow().notNull(), 
 });
 
+//visible to host(s) and any vendor/helper involved with the menu
+
 export const deco = pgTable("deco", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "deco_id_identity_seq" }), 
   vendorId: varchar("vendor_id"),
@@ -137,6 +161,8 @@ export const deco = pgTable("deco", {
   decoStatus: decoStatusEnum("deco_status"),  
   createdAt: timestamp("created_at").defaultNow().notNull(), 
 });
+
+//visible to host(s) and any vendor/helper involved with the decorations
 
 export const drink_menu = pgTable("drink_menu", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "drink_menu_id_identity_seq" }), 
@@ -163,6 +189,7 @@ export const main_dish = pgTable("main_dish", {
   MDRecipeDescr: varchar("m_d_recipe_descr"),
   MDIngredients: text("m_d_ingredients"),
   mainDishStatus: mainDishStatusEnum("main_dish_status"),  
+  //mainDishImage
   createdAt: timestamp("created_at").defaultNow().notNull(), 
 });
 
@@ -192,3 +219,5 @@ export const deco_group = pgTable("deco_group", {
   decoGroupStatus: decoGroupStatusEnum("deco_grooup_status"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+//TODO create table for music playlist -- allow guests to request music?
