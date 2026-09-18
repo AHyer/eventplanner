@@ -6,6 +6,7 @@ import { useActionState } from 'react';
 import { addGuest } from './addguest';
 import { EnumSelect } from './enum-select';
 import { dietaryRestrictionOptions, guestStatusOptions } from './enum-options';
+import { deleteGuest } from './delete-guest';
 
 const initialState = { success: false, message: '' };
 
@@ -27,11 +28,11 @@ export default function AddGuestForm({
       ) : (
         <form action={formAction}>
           <div className="mb-4">
-            <label htmlFor="event_id" className="block mb-1">Which event?</label>
+            <label htmlFor="event_id" className="block mb-1  text-slate-100">Which event?</label>
             <select
               id="event_id"
               name="event_id"
-              className="w-full px-4 py-3 bg-white border border-slate-300 rounded-md shadow-sm"
+              className="w-full px-4 py-3 bg-white border-slate-300 rounded-md shadow-sm"
               required
             >
               {events.map((event) => (
@@ -43,7 +44,7 @@ export default function AddGuestForm({
           </div>
 
           <div className="mb-4">
-            <label htmlFor="guest_name" className="block mb-1">Guest Name:</label>
+            <label htmlFor="guest_name" className="block mb-1  text-slate-100">Guest Name:</label>
             <input
               type="text"
               id="guest_name"
@@ -54,7 +55,7 @@ export default function AddGuestForm({
           </div>
 
           <div className="mb-4">
-            <label htmlFor="guest_email" className="block mb-1">Email:</label>
+            <label htmlFor="guest_email" className="block mb-1  text-slate-100">Email:</label>
             <input
               type="email"
               id="guest_email"
@@ -64,7 +65,7 @@ export default function AddGuestForm({
           </div>
 
           <div className="mb-4">
-            <label htmlFor="guest_phone" className="block mb-1">Phone:</label>
+            <label htmlFor="guest_phone" className="block mb-1  text-slate-100">Phone:</label>
             <input
               type="tel"
               id="guest_phone"
@@ -98,10 +99,11 @@ export default function AddGuestForm({
       )}
 
       {state.message && (
-        <p style={{ marginTop: '15px', color: state.success ? 'green' : 'red' }}>
+        <p style={{ marginTop: '15px', color: state.success ? 'pink' : 'magenta' }}>
           {state.message}
         </p>
       )}
     </div>
   );
 }
+

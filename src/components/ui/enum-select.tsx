@@ -24,7 +24,7 @@ export function EnumSelect<T extends string>({
 }) {
   return (
     <div className={className}>
-      <label htmlFor={name} className="block mb-1">
+      <label htmlFor={name} className="block mb-1  text-slate-100">
         {label}
       </label>
       <select
