@@ -52,6 +52,8 @@ export default function CreateUserForm() {
           </label>
         </div>
 
+        {/* TODO host option should not be visible after primary host created unless host allow secondary hosts */}
+
         <button 
           type="submit" 
           disabled={isPending}
@@ -70,4 +72,4 @@ export default function CreateUserForm() {
   );
 }
 
-//TODO replace role form box woth drop-down or radio button and route response to DB
+//TODO replace role form box with drop-down or radio button and route response to DB

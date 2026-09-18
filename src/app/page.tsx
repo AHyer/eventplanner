@@ -20,7 +20,7 @@ export default function Home() {  // function = component ;  returns UI elements
             PLAN. CREATE. CELEBRATE.
           </h1>
           <p className=" text-2xl font-aboreto font-bold leading-8 text-zinc-600 dark:text-zinc-400">
-            Horrifyingly detailed event planning. </p>
+            Next-level event planning. </p>
             <p className=" text-2xl font-aboreto leading-8 text-zinc-600 dark:text-zinc-400">
             {" "}
             <a
