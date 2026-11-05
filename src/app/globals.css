@@ -5,6 +5,7 @@
 
 /* Tailwind CSS v4 provides the custom @theme at-rule. */
 /* stylelint-disable at-rule-no-unknown */
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -239,7 +240,28 @@
   width: 100%;
 }
 
-/* Reacgt Day Picker properties (can also be added to daypicker calendar file instead): */
+/* /calendar month view: DayPicker ships fixed day widths and a fit-content
+   month wrapper, so it has to be told to stretch across whatever width the
+   screen (or orientation) gives it. Day height comes from the cell contents. */
+
+.event-calendar .rdp-months,
+.event-calendar .rdp-month {
+  width: 100%;
+  max-width: none;
+}
+
+.event-calendar .rdp-month_grid {
+  width: 100%;
+  table-layout: fixed; /* every weekday column gets an equal share of the width */
+}
+
+.event-calendar .rdp-day {
+  width: auto;
+  height: auto;
+  vertical-align: top;
+}
+
+/* React Day Picker properties (can also be added to daypicker calendar file instead): */
 
 /*.rdp-root {
   --rdp-day: green;
