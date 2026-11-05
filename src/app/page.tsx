@@ -1,3 +1,5 @@
+//HOMEPAGE -- eventplanner/src/app/page.tsx
+
 //TODO check mobile rendering -- 
 
 import Image from "next/image";

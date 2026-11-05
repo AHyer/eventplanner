@@ -19,7 +19,8 @@ interface CreateUserResult {
 export async function createUser(prevState: unknown, formData: FormData): Promise<CreateUserResult> {
   const name = formData.get('name') as string | null;
   const email = formData.get('email') as string | null;
-  const role = formData.get('role') as UserRole | null;
+  const role = formData.get('role') as UserRole | null; //TODO validate role--lock host after primary (first) host created, but allow primary host to designate additional host(s)
+  //TODO validate guest roles against 'invited guest' list for event, and vendor roles against 'approved vendor' list for event
 
   const inputs: CreateUserInputs = {
     name: name ?? '',
@@ -33,7 +34,7 @@ export async function createUser(prevState: unknown, formData: FormData): Promis
   }
 
   try {
-    // Type-safe insert query using Drizzle ORM
+    // Type-safe insert query to DB using Drizzle ORM
     await db.insert(users).values({
       username: inputs.name,
       email: inputs.email,
