@@ -39,7 +39,7 @@ export default function CreateUserForm() {
         </div>
 
         <div>
-          <label htmlFor="role" style={{ paddingRight: '10px', display: 'block', marginBottom: '10px', marginRight: '10px' }}>Role: 
+          <label htmlFor="role" style={{ paddingRight: '10px', display: 'block', marginBottom: '10px', marginRight: '10px' }}>Role: </label>  
           <select
             id="role"
             name="role"
@@ -49,7 +49,7 @@ export default function CreateUserForm() {
             <option value="vendor">vendor</option>
             <option value="guest">guest</option>
           </select>
-          </label>
+          
         </div>
 
         {/* TODO host option should not be visible after primary host created unless host allow secondary hosts */}
@@ -57,7 +57,7 @@ export default function CreateUserForm() {
         <button 
           type="submit" 
           disabled={isPending}
-          style={{ padding: '10px 15px', backgroundColor: '#daa4c2', color: '#fff', border: 'none', cursor: 'pointer' }}
+          style={{ padding: '10px 15px', marginTop: '15px', backgroundColor: '#daa4c2', color: '#fff', border: 'none', cursor: 'pointer' }}
         >
           {isPending ? 'Saving...' : 'Submit'}  
         </button>
@@ -72,4 +72,4 @@ export default function CreateUserForm() {
   );
 }
 
-//TODO replace role form box with drop-down or radio button and route response to DB
+

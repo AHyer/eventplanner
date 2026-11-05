@@ -30,8 +30,8 @@ export const dietaryRestrictionEnum = pgEnum("dietary_restriction", ["none", "gl
 
 export const users = pgTable("users", { //strictly visible to host(s) users only
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "users_id_identity_seq" }), 
-  username: varchar("username").notNull(),
-  email: varchar("email").notNull(),
+  username: varchar("username").notNull().unique(),
+  email: varchar("email").notNull().unique(),
   role: userRoleEnum("role").notNull().default("guest"), //default will have minimal permissions
   createdAt: timestamp("created_at").defaultNow().notNull(), 
 });

@@ -1,0 +1,8 @@
+{
+  // Tailwind v4 is CSS-first: @theme, @apply, @custom-variant and friends live in
+  // globals.css. VS Code's built-in CSS validator doesn't know those at-rules and
+  // flags them as "Unknown at rule". They are valid — don't comment them out.
+  "css.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  "less.lint.unknownAtRules": "ignore"
+}
