@@ -7,7 +7,11 @@ import {createEvent} from './createevent';
 
 const initialState = { success: false, message: '' };
 
-export default function CreateEventForm() {
+export default function CreateEventForm({
+  defaultDate, //"YYYY-MM-DD" when the user got here by clicking a day on /calendar
+}: {
+  defaultDate?: string;
+}) {
   const [state, formAction, isPending] = useActionState(createEvent, initialState);
 
   return (
@@ -33,8 +37,9 @@ export default function CreateEventForm() {
             type="date" //automagically renders date picker
             id="eventdate"
             name="eventdate"
+            defaultValue={defaultDate ?? ''} //pre-filled from /calendar, still editable
             className="w-full px-4 py-3 bg-white border border-slate-300 rounded-md shadow-sm"
-            
+
             //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}
           />
         </div>

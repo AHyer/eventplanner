@@ -1,23 +1,13 @@
 // src/components/ui/listguests.tsx
-// The host's full guest list with each guest's RSVP status, grouped by event.
+// The host's guest list with each guest's RSVP status, grouped by event.
+// Selection/removal lives in guest-checklist.tsx — this half only queries.
 
 import { db } from '@/db/index';
 import { events, guests } from '@/db/schema';
 import { asc, eq } from 'drizzle-orm';
-import Link from 'next/link';
+import GuestChecklist, { type GuestGroup } from './guest-checklist';
 
 const CURRENT_USER_ID = 1; //TODO debug (until auth is implemented)
-
-type GuestStatus = typeof guests.guestStatus.enumValues[number];
-
-// Short badge wording — the longer phrasing in guestStatusOptions is for the dropdown.
-const statusDisplay: Record<GuestStatus, { label: string; className: string }> = {
-  invited: { label: 'Awaiting reply', className: 'bg-amber-100 text-amber-900' },
-  accepted: { label: 'Accepted', className: 'bg-green-100 text-green-900' },
-  declined: { label: 'Declined', className: 'bg-rose-100 text-rose-900' },
-};
-
-const noStatus = { label: 'Not invited yet', className: 'bg-slate-100 text-slate-700' };
 
 export default async function ListGuests() {
   // One join instead of a query per event — guests are only reachable through
@@ -40,13 +30,25 @@ export default async function ListGuests() {
 
   // Group in JS rather than SQL — the rows are already sorted, so this just
   // splits them into one block per event without a second round trip.
-  const byEvent = new Map<number, { eventName: string | null; eventDate: string | null; guests: typeof rows }>();
+  const groups: GuestGroup[] = [];
   for (const row of rows) {
-    const group = byEvent.get(row.eventId);
+    const group = groups.find((candidate) => candidate.eventId === row.eventId);
+    const guest = {
+      guestId: row.guestId,
+      guestName: row.guestName,
+      guestEmail: row.guestEmail,
+      guestPhone: row.guestPhone,
+      guestStatus: row.guestStatus,
+    };
     if (group) {
-      group.guests.push(row);
+      group.guests.push(guest);
     } else {
-      byEvent.set(row.eventId, { eventName: row.eventName, eventDate: row.eventDate, guests: [row] });
+      groups.push({
+        eventId: row.eventId,
+        eventName: row.eventName,
+        eventDate: row.eventDate,
+        guests: [guest],
+      });
     }
   }
 
@@ -69,43 +71,11 @@ export default async function ListGuests() {
     <section className="p-6">
       <h1 className="text-3xl font-bold mb-2">Guest Responses</h1>
 
-      <p className="mb-6 text-sm">
+      <p className="mb-4 text-sm">
         {rows.length} guests · {accepted} accepted · {declined} declined · {waiting} awaiting reply
       </p>
 
-      {[...byEvent.entries()].map(([eventId, group]) => (
-        <div key={eventId} className="mb-8">
-          <Link href={`/events/${eventId}`}>
-            <h2 className="text-2xl font-bold text-gray-500">{group.eventName ?? 'Untitled event'}</h2>
-          </Link>
-          <p className="mb-3 text-sm">
-            {group.eventDate
-              ? new Date(group.eventDate).toLocaleDateString('en-US', { //match the formatting used on the events list
-                  month: 'long',
-                  day: 'numeric',
-                  year: 'numeric',
-                })
-              : 'Date TBD'}
-            {' · '}
-            {group.guests.filter((guest) => guest.guestStatus === 'accepted').length} of {group.guests.length} attending
-          </p>
-
-          <ul className="space-y-2">
-            {group.guests.map((guest) => {
-              const status = guest.guestStatus ? statusDisplay[guest.guestStatus] : noStatus;
-              return (
-                <li key={guest.guestId} className="p-3 border rounded shadow-sm flex flex-wrap items-center justify-between gap-2">
-                  <div>
-                    <p className="font-semibold">{guest.guestName ?? 'Unnamed guest'}</p>
-                    <p className="text-sm text-gray-500">{guest.guestEmail ?? guest.guestPhone ?? 'No contact info'}</p>
-                  </div>
-                  <span className={`px-3 py-1 rounded-full text-sm ${status.className}`}>{status.label}</span>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      ))}
+      <GuestChecklist groups={groups} />
     </section>
   );
 }
