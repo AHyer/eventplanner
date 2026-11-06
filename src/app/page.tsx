@@ -18,7 +18,7 @@ export default function Home() {  // function = component ;  returns UI elements
        
         <div className="flex flex-col items-center gap-6 text-center  sm:text-center">
           
-          <h1 className="text-6xl md:text-8xl font-aboreto tracking-tight text-zinc-800 dark:text-zinc-200">
+          <h1 className="text-6xl md:text-8xl font-aboreto tracking-tight text-zinc-800 dark:text-zinc-100">
             PLAN. CREATE. CELEBRATE.
           </h1>
           <p className=" text-2xl font-aboreto font-bold leading-8 text-zinc-600 dark:text-zinc-400">

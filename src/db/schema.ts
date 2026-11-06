@@ -30,15 +30,16 @@ export const dietaryRestrictionEnum = pgEnum("dietary_restriction", ["none", "gl
 
 export const users = pgTable("users", { //strictly visible to host(s) users only
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "users_id_identity_seq" }), 
-  username: varchar("username").notNull().unique(),
+  googleSub: varchar("google_sub").unique(),   // unique stable Google identity, needed for perssitence
+  username: varchar("username").notNull(),  //.unique() dropped for now to allow multiple users with same name (e.g., John Smith) but unique email
   email: varchar("email").notNull().unique(),
   role: userRoleEnum("role").notNull().default("guest"), //default will have minimal permissions
   createdAt: timestamp("created_at").defaultNow().notNull(), 
 });
 
-//is a "primary" host source of truth needed if htere is more than one host?
-//is a "helper" role needed?
-//user directory should be visible to host(s) only
+//is a "primary" host source of truth needed if there is more than one host?
+//is a "helper" role needed instead of "sub-hosts"?
+//TODO user directory should be visible to host(s) only
 
 
 export const events = pgTable("events", { //strictly visible to host(s) users only

@@ -1,4 +1,4 @@
-'use client';
+'use client'; //reminder: if this is absent, page will be rendered on server side, and useActionState will not work
 
 import { useActionState } from 'react';
 import {createUser} from './createuser';

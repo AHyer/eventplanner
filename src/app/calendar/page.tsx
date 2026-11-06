@@ -5,14 +5,19 @@ import { db } from '@/db';
 import { events } from '@/db/schema';
 import { and, asc, eq, isNotNull } from 'drizzle-orm';
 import EventCalendar, { type CalendarEvent } from '@/components/ui/event-calendar';
+import { getCurrentUser } from '@/lib/dal';
 
-const CURRENT_USER_ID = 1; //TODO debug (until auth is implemented)
+//const CURRENT_USER_ID = 1; //debug (until auth is implemented)
 
 export default async function CalendarPage() {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) { 
+      return { success: false, message: 'You must be signed in to create an event.' };
+    }
   const dated = await db
     .select({ id: events.id, eventName: events.eventName, eventDate: events.eventDate })
     .from(events)
-    .where(and(eq(events.userId, CURRENT_USER_ID), isNotNull(events.eventDate)))
+    .where(and(eq(events.userId, currentUser.id), isNotNull(events.eventDate)))
     .orderBy(asc(events.eventDate));
 
   //isNotNull already filtered the nulls; this narrows the type for the client component

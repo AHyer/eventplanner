@@ -272,9 +272,9 @@
 }
 */
 
+/*from auth.js tutorial: */
 
-
-/* @layer base {
+@layer base {
   * {
     @apply border-border outline-ring/50;
   }
@@ -284,4 +284,4 @@
   html {
     @apply font-sans;
   }
-} */
+}

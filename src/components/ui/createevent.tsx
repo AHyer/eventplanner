@@ -6,8 +6,11 @@
 
 import { db } from '@/db';
 import { events } from '@/db/schema';
+import { users } from '@/db/schema';
+import { auth } from '@/auth';
+import { getCurrentUser } from '@/lib/dal';
 
-const CURRENT_USER_ID = 1;  //TODO debug (until auth is implemented)
+//const CURRENT_USER_ID = 1;  //debug (prior to auth implementation)
 
 //TODO should create event and edit event pages be merged into one?
 
@@ -28,6 +31,14 @@ interface CreateEventResult {
 }
 
 export async function createEvent(prevState: unknown, formData: FormData): Promise<CreateEventResult> {
+  // const session = await auth();
+  // if (!session?.user?.id) {
+  //   return { success: false, message: 'You must be signed in to create an event.' };
+  // }
+  const currentUser = await getCurrentUser();
+  if (!currentUser) { 
+    return { success: false, message: 'You must be signed in to create an event.' };
+  }
   const eventname = formData.get('eventname') as string | null;
   const eventdate = formData.get('eventdate') as string | null;
   const eventvenue = formData.get('eventvenue') as string | null;
@@ -57,7 +68,8 @@ export async function createEvent(prevState: unknown, formData: FormData): Promi
   try {
     // Type-safe insert query using Drizzle ORM
     await db.insert(events).values({
-      userId: CURRENT_USER_ID,
+      //userId: Number(session.user.id),
+      userId: currentUser.id,  //auth() returns session object with user id, getCurrentUser() returns user row with id
       eventName: inputs.eventName,  //required for submission (others can be added later)
       eventDate: inputs.eventDate,  
       eventVenue: inputs.eventVenue,  

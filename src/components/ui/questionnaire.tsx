@@ -7,12 +7,13 @@
 import { db } from '@/db';
 import { events } from '@/db/schema';
 import { event_guests_profile } from '@/db/schema';
+import { getCurrentUser } from '@/lib/dal';
 // import { guests } from '@/db/schema';
 // import { tasks } from '@/db/schema';
 // import { notes } from '@/db/schema';
 // import { deco } from '@/db/schema';
 
-const CURRENT_USER_ID = 1;  //debug (until auth is implemented)
+//const CURRENT_USER_ID = 1;  //debug (until auth is implemented)
 
 interface QuestionnaireInputs {
     eventName: string;    //eventName is the only required field; everything else is optional
@@ -79,11 +80,15 @@ if (!inputs.eventName) {
 
   try {
     await db.transaction(async (tx) => {
+        const currentUser = await getCurrentUser();
+        if (!currentUser) { 
+          return { success: false, message: 'You must be signed in to create an event.' };
+        }
       // events row always gets created — it's the anchor everything else hangs off
       const [newEvent] = await tx
         .insert(events) //insert to events table
         .values({
-          userId: CURRENT_USER_ID,
+          userId: currentUser.id,  //auth() returns session object with user id, getCurrentUser() returns user row with id
           eventName: inputs.eventName,
           // only set a field if it was actually answered — otherwise leave it
           // undefined so Drizzle uses the column's default/null instead of
