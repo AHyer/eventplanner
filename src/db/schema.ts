@@ -26,7 +26,7 @@ export const ageBracketEnum = pgEnum("age_bracket", ["under_18", "18_24", "25_34
 export const educationLevelEnum = pgEnum("education_level", ["less_than_high_school", "high_school", "some_college", "trade_school", "associates", "bachelors", "masters", "professional", "doctorate"]);
 export const profileGenderEnum = pgEnum("profile_gender", ["mixed", "mostly_women", "mostly_men", "all_women", "all_men", "unspecified"]); //describes the guest list as a whole, not one person
 export const dietaryRestrictionEnum = pgEnum("dietary_restriction", ["none", "gluten_free", "dairy_free", "nut_free", "shellfish_free", "vegetarian", "vegan", "pescatarian", "kosher", "halal", "other"]);
-
+export const inviteMethodEnum = pgEnum("invite_method", ["email", "text", "paper", "other"]);
 
 export const users = pgTable("users", { //strictly visible to host(s) users only
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "users_id_identity_seq" }), 
@@ -60,6 +60,7 @@ export const events = pgTable("events", { //strictly visible to host(s) users on
   numGuests: integer("num_guests"),
   guestsMaxNum: integer("max_num_guests"),  
   guestsMinNum: integer("min_num_guests"),
+  inviteMethod: inviteMethodEnum("invite_method"), //email, text, paper, other
   //guestsAttending: integer //calculated from guest table > guest status
   hostLaborPortion: hostLaborPortionEnum("host_labor_portion"), //percentage
   hostHelpers: integer("host_helpers"),
@@ -85,7 +86,7 @@ export const event_guests_profile = pgTable("event_guests_profile", { //strictly
   createdAt: timestamp("created_at").defaultNow().notNull(), 
 });
 
-//data could be anonymized and used to suggest event aspects (food, drink, decor, music)
+//above data could be anonymized and used to suggest event aspects (food, drink, decor, music)
 
 
 export const vendors = pgTable("vendors", {
