@@ -6,14 +6,28 @@ import { events } from '@/db/schema';
 import { and, asc, eq, isNotNull } from 'drizzle-orm';
 import EventCalendar, { type CalendarEvent } from '@/components/ui/event-calendar';
 import { getCurrentUser } from '@/lib/dal';
+import SignInGoogle from '@/components/ui/signin-google';
 
 //const CURRENT_USER_ID = 1; //debug (until auth is implemented)
 
 export default async function CalendarPage() {
-    const currentUser = await getCurrentUser();
-    if (!currentUser) { 
-      return { success: false, message: 'You must be signed in to create an event.' };
-    }
+  const currentUser = await getCurrentUser();
+
+  //a page renders UI for the signed-out case; only the server actions return {success, message}
+  if (!currentUser) {
+    return (
+      <main className="calendar-background font-aboreto font-bold flex flex-1 w-full flex-col items-center justify-center gap-6 py-8 px-2 sm:py-12 sm:px-6 lg:px-10 bg-white dark:bg-black">
+        <h1 className="text-3xl font-aboreto text-zinc-800 dark:text-zinc-100">
+          Schedule
+        </h1>
+        <p className="font-arapey text-lg text-zinc-800 dark:text-zinc-100">
+          Sign in to see your events.
+        </p>
+        <SignInGoogle />
+      </main>
+    );
+  }
+
   const dated = await db
     .select({ id: events.id, eventName: events.eventName, eventDate: events.eventDate })
     .from(events)
