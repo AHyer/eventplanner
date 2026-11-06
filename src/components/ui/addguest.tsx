@@ -1,14 +1,17 @@
 // src/components/ui/addguest.tsx
 // Adds one guest to an event so the RSVP list on /guests has something to show.
 
+//TODO 
+
 'use server';
 
 import { db } from '@/db';
 import { guests, events } from '@/db/schema';
+import { getCurrentUser } from '@/lib/dal';
 import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 
-const CURRENT_USER_ID = 1; //TODO debug (until auth is implemented)
+//const CURRENT_USER_ID = 1; //debug (until auth is implemented)
 
 interface AddGuestResult {
   success: boolean;
@@ -37,10 +40,14 @@ export async function addGuest(
     // Only let the host add guests to their own events — the page filters by
     // host too, so without this a guest could be attached to someone else's event
     // and then never show up in the list.
+     const currentUser = await getCurrentUser();
+      if (!currentUser) { 
+        return { success: false, message: 'You must be signed in to add a guest.' };
+      }
     const [event] = await db
       .select({ id: events.id })
       .from(events)
-      .where(and(eq(events.id, eventId), eq(events.userId, CURRENT_USER_ID)));
+      .where(and(eq(events.id, eventId), eq(events.userId, currentUser.id)));
 
     if (!event) {
       return { success: false, message: 'That event was not found.' };

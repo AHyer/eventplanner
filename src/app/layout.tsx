@@ -5,7 +5,7 @@ import { Geist, Geist_Mono, Figtree, Aboreto, Arapey } from "next/font/google";
 import "react-day-picker/style.css";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { Nav } from "@/components/ui/nav";
+import Nav from "@/components/ui/nav";
 
 
 const figtree = Figtree({subsets:['latin'],variable:'--font-sans'});

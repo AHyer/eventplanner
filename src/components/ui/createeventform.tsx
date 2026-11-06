@@ -99,9 +99,18 @@ export default function CreateEventForm({
             type="radio"
             id="outside"
             name="outside"
-            className="px-8 py-8 bg-white border border-slate-300 rounded-md shadow-sm"
+            value="true"
+            className="px-8 py-8 bg-white border border-slate-300 rounded-md shadow-sm ml-5 mr-1"
             //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}
-          />
+          />Yes
+           <input
+            type="radio"
+            id="outside"
+            name="outside"
+            value="false"
+            className="px-8 py-8 bg-white border border-slate-300 rounded-md shadow-sm ml-5 mr-1"
+            //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}
+          />No
         </div>
 
         <div style={{ marginBottom: '15px' }}>
@@ -110,9 +119,18 @@ export default function CreateEventForm({
             type="radio"
             id="alcoholserved"
             name="alcoholserved"
-            className="px-4 py-3 bg-white border border-slate-300 rounded-md shadow-sm"
+            value="true"
+            className="px-4 py-3 bg-white border border-slate-300 rounded-md shadow-sm ml-5 mr-1"
             //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}
-          />
+          />Yes
+           <input
+            type="radio"
+            id="alcoholserved"
+            name="alcoholserved"
+            value="false"
+            className="px-4 py-3 bg-white border border-slate-300 rounded-md shadow-sm ml-5 mr-1"
+            //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}
+          />No
         </div>
 
         <button 
