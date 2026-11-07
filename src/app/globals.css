@@ -121,6 +121,51 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+.form-box {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.radio-button {
+  padding: 0.75rem 1rem;
+  background-color: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  margin-left: 1.25rem;
+  margin-right: 0.25rem;
+}
+
+
+/* The /plan page submit button, promoted to the app-wide button look.
+   Apply with className="framed-button"; add framed-button--danger on top of it
+   for destructive actions (delete / remove). */
+.framed-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 15px 15px;
+  background-color: #bd83b0;
+  color: #fff;
+  border: 4mm ridge rgb(20 20 20 / 0.6);
+  text-align: center;
+  cursor: pointer;
+  transition-property: color, background-color, border-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms;
+  &:hover { background-color: #a96b9c; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+}
+
+.framed-button--danger {
+  background-color: #aa126d;
+  &:hover { background-color: #8c0f5a; }
+}
+
 .hero-background {
   /* Relative path to the image from your CSS file */
   background-image: url('/alexander-grey-62vi3TG5EDg-unsplash.jpg'); 

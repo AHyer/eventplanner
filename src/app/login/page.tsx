@@ -14,17 +14,18 @@ export default async function LoginPage() {  // function = component ;  returns 
     <div className="flex flex-col md:flex-row w-full min-h-screen">
       <main className="events-background font-aboreto font-bold flex flex-1 w-full flex-col   items-stretch justify-start py-4 px-6 md:py-66 md:px-16 bg-white dark:bg-black " >
        {session?.user ? (
-         <p className="font-arapey text-lg">
-           Signed in as {session.user.email}
-         </p>
+         <><p className="font-arapey text-lg">
+            Signed in as {session.user.email}
+          </p>
+          <aside className="w-full md:block md:w-140 font-aboreto font-bold md:shrink-0 border-l border-slate-200 p-6">
+              <ListUsers />
+            </aside></>
        ) : (
          <SignInGoogle />
        )}
       </main>
         
-        <aside className="w-full md:block md:w-140 font-aboreto font-bold md:shrink-0 border-l border-slate-200 p-6">
-          <ListUsers/>
-        </aside>
+        
     </div>
   );
 }

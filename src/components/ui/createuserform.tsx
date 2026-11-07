@@ -57,7 +57,7 @@ export default function CreateUserForm() {
         <button 
           type="submit" 
           disabled={isPending}
-          style={{ padding: '10px 15px', marginTop: '15px', backgroundColor: '#daa4c2', color: '#fff', border: 'none', cursor: 'pointer' }}
+          className="framed-button"
         >
           {isPending ? 'Saving...' : 'Submit'}  
         </button>

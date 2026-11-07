@@ -14,16 +14,25 @@ export default async function CalendarPage() {
   const currentUser = await getCurrentUser();
 
   //a page renders UI for the signed-out case; only the server actions return {success, message}
+  //the month grid still shows, just with no events on it, and the sign-in sits below it
   if (!currentUser) {
     return (
-      <main className="calendar-background font-aboreto font-bold flex flex-1 w-full flex-col items-center justify-center gap-6 py-8 px-2 sm:py-12 sm:px-6 lg:px-10 bg-white dark:bg-black">
-        <h1 className="text-3xl font-aboreto text-zinc-800 dark:text-zinc-100">
-          Schedule
+      <main className="calendar-background font-aboreto font-bold flex flex-1 w-full flex-col items-stretch justify-start py-8 px-2 sm:py-12 sm:px-6 lg:px-10 bg-white dark:bg-black">
+        <h1 className="text-3xl font-aboreto mb-2 text-zinc-800 dark:text-zinc-100">
+          Events Schedule
         </h1>
-        <p className="font-arapey text-lg text-zinc-800 dark:text-zinc-100">
-          Sign in to see your events.
+  
+
+        <EventCalendar events={[]} />
+     
+        <div className="mt-20 flex justify-center">
+          <p className="font-arapey text-lg text-zinc-800 dark:text-zinc-100">
+          Sign in to see your events
         </p>
-        <SignInGoogle />
+        </div>
+         <div className="mt-6 flex justify-center">
+          <SignInGoogle />
+        </div>
       </main>
     );
   }
@@ -44,7 +53,7 @@ export default async function CalendarPage() {
   return (
     <main className="calendar-background font-aboreto font-bold flex flex-1 w-full flex-col items-stretch justify-start py-8 px-2 sm:py-12 sm:px-6 lg:px-10 bg-white dark:bg-black">
       <h1 className="text-3xl font-aboreto mb-2 text-zinc-800 dark:text-zinc-100">
-        Schedule
+        Events Schedule
       </h1>
       <p className="mb-6 font-arapey text-lg text-zinc-800 dark:text-zinc-100">
         Click an event to edit it, or any empty day to plan something new.

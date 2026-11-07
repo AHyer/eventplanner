@@ -19,15 +19,17 @@ export default function AddGuestForm({
 
   return (
     <div className="w-full max-w-4xl">
-      <h2>Add A Guest</h2>
+    
 
       {events.length === 0 ? (
         <p className="mt-4 font-arapey text-lg">
           Create an event first — guests are tracked per event.
         </p>
       ) : (
+        
         <form action={formAction}>
           <div className="mb-4">
+            <h2>Add A Guest</h2>
             <label htmlFor="event_id" className="block mb-1  text-slate-100">Which event?</label>
             <select
               id="event_id"
@@ -91,7 +93,7 @@ export default function AddGuestForm({
           <button
             type="submit"
             disabled={isPending}
-            style={{ padding: '15px 15px', backgroundColor: '#bd83b0', color: '#fff', border: '4mm ridge rgb(20 20 20 / 0.6)', cursor: 'pointer' }}
+            className="framed-button"
           >
             {isPending ? 'Saving...' : 'Add Guest'}
           </button>
