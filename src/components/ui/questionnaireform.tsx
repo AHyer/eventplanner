@@ -128,7 +128,7 @@ export default function QuestionnaireForm() {
         <button 
           type="submit" 
           disabled={isPending}
-          style={{ padding: '15px 15px', backgroundColor: '#bd83b0', color: '#fff', border: '4mm ridge rgb(20 20 20 / 0.6)', cursor: 'pointer' }}
+          className="framed-button"
         >
           {isPending ? 'Saving...' : 'Submit Questionnaire'}
         </button>

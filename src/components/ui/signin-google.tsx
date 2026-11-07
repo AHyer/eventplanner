@@ -14,10 +14,13 @@ export default function SignInGoogle() {
     >
       <button
         type="submit"
-        className="rounded-md bg-[#daa4c2] px-6 py-3 text-white shadow-sm transition-colors hover:bg-[#c88fb0]"
+        className="framed-button"
       >
         Sign in with Google
       </button>
+       
+
+
     </form>
   );
 }

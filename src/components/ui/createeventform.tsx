@@ -25,7 +25,7 @@ export default function CreateEventForm({
             type="text"
             id="eventname"
             name="eventname"
-            className="w-full px-4 py-3 bg-white border border-slate-300 rounded-md shadow-sm"    
+            className="form-box"
             required
             //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}   //input box
           />
@@ -38,7 +38,7 @@ export default function CreateEventForm({
             id="eventdate"
             name="eventdate"
             defaultValue={defaultDate ?? ''} //pre-filled from /calendar, still editable
-            className="w-full px-4 py-3 bg-white border border-slate-300 rounded-md shadow-sm"
+            className="form-box"
 
             //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}
           />
@@ -50,7 +50,7 @@ export default function CreateEventForm({
             type="text"
             id="eventvenue"
             name="eventvenue"
-            className="w-full px-4 py-3 bg-white border border-slate-300 rounded-md shadow-sm"
+            className="form-box"
             
             //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}
           />
@@ -62,7 +62,7 @@ export default function CreateEventForm({
             type="text"
             id="venueaddress"
             name="venueaddress"
-            className="w-full px-4 py-3 bg-white border border-slate-300 rounded-md shadow-sm"
+            className="form-box"
             
             //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}
           />
@@ -75,7 +75,7 @@ export default function CreateEventForm({
             type="text"
             id="eventvibe"
             name="eventvibe"
-            className="w-full px-4 py-3 bg-white border border-slate-300 rounded-md shadow-sm"
+            className="form-box"
             placeholder='describe the general vibe you would like for your event'
             //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}
           />
@@ -87,7 +87,7 @@ export default function CreateEventForm({
             type="text"
             id="numguests"
             name="numguests"
-            className="w-full px-4 py-3 bg-white border border-slate-300 rounded-md shadow-sm"
+            className="form-box"
             
             //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}
           />
@@ -100,16 +100,14 @@ export default function CreateEventForm({
             id="outside"
             name="outside"
             value="true"
-            className="px-8 py-8 bg-white border border-slate-300 rounded-md shadow-sm ml-5 mr-1"
-            //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}
+            className="radio-button"
           />Yes
            <input
             type="radio"
             id="outside"
             name="outside"
             value="false"
-            className="px-8 py-8 bg-white border border-slate-300 rounded-md shadow-sm ml-5 mr-1"
-            //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}
+            className="radio-button"
           />No
         </div>
 
@@ -120,23 +118,21 @@ export default function CreateEventForm({
             id="alcoholserved"
             name="alcoholserved"
             value="true"
-            className="px-4 py-3 bg-white border border-slate-300 rounded-md shadow-sm ml-5 mr-1"
-            //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}
+            className="radio-button"
           />Yes
            <input
             type="radio"
             id="alcoholserved"
             name="alcoholserved"
             value="false"
-            className="px-4 py-3 bg-white border border-slate-300 rounded-md shadow-sm ml-5 mr-1"
-            //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}
+            className="radio-button"
           />No
         </div>
 
         <button 
           type="submit" 
           disabled={isPending}
-          style={{ padding: '15px 15px', backgroundColor: '#bd83b0', color: '#fff', border: '4mm ridge rgb(20 20 20 / 0.6)', cursor: 'pointer' }}
+          className="framed-button"
         >
           {isPending ? 'Saving...' : 'Submit Event'}
         </button>

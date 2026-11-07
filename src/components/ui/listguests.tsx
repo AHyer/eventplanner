@@ -7,11 +7,9 @@ import { events, guests } from '@/db/schema';
 import { asc, eq } from 'drizzle-orm';
 import GuestChecklist, { type GuestGroup } from './guest-checklist';
 
-const CURRENT_USER_ID = 1; //TODO debug (until auth is implemented)
-
-export default async function ListGuests() {
+export default async function ListGuests({ userId }: { userId: number }) {
   // One join instead of a query per event — guests are only reachable through
-  // the events this host owns, since there is no auth to filter on.
+  // the events this host owns, so filtering the events by owner is enough.
   const rows = await db
     .select({
       guestId: guests.id,
@@ -25,7 +23,7 @@ export default async function ListGuests() {
     })
     .from(guests)
     .innerJoin(events, eq(guests.eventId, events.id))
-    .where(eq(events.userId, CURRENT_USER_ID))
+    .where(eq(events.userId, userId))
     .orderBy(asc(events.eventDate), asc(guests.guestName)); //soonest event first
 
   // Group in JS rather than SQL — the rows are already sorted, so this just
