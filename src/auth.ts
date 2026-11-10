@@ -2,6 +2,7 @@
 // Lives under src/ so it resolves through the "@/*" -> "./src/*" path mapping.
 
 import NextAuth from "next-auth";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import Google from "next-auth/providers/google";
 import { eq } from "drizzle-orm";
 import { users } from "./db/schema";
@@ -9,6 +10,7 @@ import { db } from "./db";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   // v5 picks up AUTH_GOOGLE_ID / AUTH_GOOGLE_SECRET from the LOCAL env file.
+  adapter: DrizzleAdapter(db),  //pass your db instance into DrizzleAdapter
   providers: [
     Google({
       // Google otherwise skips straight past the chooser once consent is granted,
