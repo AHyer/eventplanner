@@ -1,9 +1,9 @@
 // src/components/ui/enum-options.ts
-// Dropdown options for the pgEnum columns in src/db/schema.ts.
+// DROPDOWN OPTIONS for the pgEnum columns in src/db/schema.ts.
 // The `value` is what gets written to the DB and must match the enum exactly —
 // Postgres rejects anything else — so the value types are pulled from the schema
 // with a type-only import (erased at build time, so no server code reaches the client).
-// The `label` is only display text and can be reworded freely.
+// The `label` is only display text for the user and can be reworded freely.
 
 import type {
   budgetAmountEnum,
@@ -13,6 +13,10 @@ import type {
   dietaryRestrictionEnum,
   hireOutTasksEnum,
   guestStatusEnum,
+  taskCategoryEnum,
+  taskContextEnum,
+  taskPriorityEnum,
+  assignedTaskRoleEnum,
 } from '@/db/schema';
 
 export type EnumOption<T extends string> = { value: T; label: string };
@@ -94,3 +98,39 @@ export const hireOutTasksOptions: EnumOption<HireOutTask>[] = [
   { value: 'pre-cleaning', label: 'Cleaning beforehand' },
   { value: 'post-cleaning', label: 'Cleaning afterward' },
 ];
+
+
+type TaskCategory = (typeof taskCategoryEnum)['enumValues'][number];
+export const taskCategoryOptions: EnumOption<TaskCategory>[] = [
+  { value: 'venue', label: 'Venue' },
+  { value: 'catering', label: 'Catering' },
+  { value: 'decor', label: 'Decor' },
+  { value: 'music', label: 'Music' },
+  { value: 'guests', label: 'Guests' },
+];
+
+type TaskContext = (typeof taskContextEnum)['enumValues'][number];
+export const taskContextOptions: EnumOption<TaskContext>[] = [
+  { value: 'errands', label: 'Errands' },
+  { value: 'kitchen', label: 'Kitchen' },
+  { value: 'yard', label: 'Yard' },
+  { value: 'computer', label: 'Computer' },
+  { value: 'phone', label: 'Phone' },
+];
+
+type TaskPriority = (typeof taskPriorityEnum)['enumValues'][number];
+export const taskPriorityOptions: EnumOption<TaskPriority>[] = [
+  { value: '1', label: '1 — Highest priority' },
+  { value: '2', label: '2' },
+  { value: '3', label: '3 — Medium priority' },
+  { value: '4', label: '4' },
+  { value: '5', label: '5 — Lowest priority' },
+];
+
+type AssignedTaskRole = (typeof assignedTaskRoleEnum)['enumValues'][number];
+export const assignedTaskRoleOptions: EnumOption<AssignedTaskRole>[] = [
+  { value: 'host', label: 'Host' },
+  { value: 'subhost', label: 'Subhost' },
+  { value: 'vendor', label: 'Vendor' },
+];    
+
