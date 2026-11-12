@@ -52,6 +52,17 @@ export default function CreateTaskForm({
           </div>
 
           <div className="mb-4">
+            <label htmlFor="task_notes" className="block mb-1  text-slate-100">Task Notes:</label>
+            <input
+              type="text"
+              id="task_notes"
+              name="task_notes"
+              className="w-full px-4 py-3 bg-white border border-slate-300 rounded-md shadow-sm"
+              required
+            />
+          </div>
+
+          <div className="mb-4">
             <label htmlFor="due_date" className="block mb-1  text-slate-100">Due Date:</label>
             <input
               type="date"

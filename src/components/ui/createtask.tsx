@@ -18,6 +18,7 @@ export async function addTask(
 ): Promise<AddTaskResult> {
   const eventId = Number(formData.get('event_id'));
   const taskName = formData.get('task_name') as string | null;
+  const taskNotes = formData.get('task_notes') as string | null;
   const dueDate = formData.get('due_date') as string | null;
   const taskStatus = formData.get('task_status') as string | null;
   const taskCategory = formData.get('task_category') as string | null;
@@ -50,6 +51,7 @@ export async function addTask(
     await db.insert(tasks).values({
       eventId,
       taskName,
+      taskNotes: taskNotes || undefined,
       dueDate: dueDate ? new Date(dueDate) : undefined,
       //TODO validate due date (not in past, etc.)
       taskStatus: (taskStatus || undefined) as typeof tasks.taskStatus.enumValues[number] | undefined,

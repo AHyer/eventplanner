@@ -9,7 +9,9 @@ export default async function ListTasks({ userId }: { userId: number }) {
     .select({
       taskId: tasks.id,
       taskName: tasks.taskName,
+      taskNotes: tasks.taskNotes,
       taskStatus: tasks.taskStatus,
+      
       eventId: events.id,
       eventName: events.eventName,
       eventDate: events.eventDate,

@@ -132,6 +132,7 @@ export const tasks = pgTable("tasks", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "tasks_id_identity_seq" }), 
   eventId: integer("eventId").notNull().references(() => events.id, {onDelete: 'cascade' }),
   taskName: varchar("task_name").notNull(),
+  taskNotes: text("task_notes"),
   dueDate: timestamp("task_due_date"),
   taskStatus: taskStatusEnum("task_status"), 
   taskCategory: taskCategoryEnum("task_category"), //e.g., "venue", "catering", "decor", "music", "guests", etc.  
