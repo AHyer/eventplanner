@@ -1,7 +1,6 @@
 // src/components/ui/addguest.tsx
 // Adds one guest to an event so the RSVP list on /guests has something to show.
 
-//TODO 
 
 'use server';
 
@@ -60,6 +59,7 @@ export async function addGuest(
       guestPhone: guestPhone || undefined,
       guestStatus: (guestStatus || undefined) as typeof guests.guestStatus.enumValues[number] | undefined,
       guestDietaryRestrictions: (dietaryRestrictions || undefined) as typeof guests.guestDietaryRestrictions.enumValues[number] | undefined,
+      allowVisibleToGuests: false, //default to false, can be changed later
     });
 
     revalidatePath('/guests'); //prevents stale version from being served

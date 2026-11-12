@@ -6,7 +6,6 @@
 
 import { db } from '@/db';
 import { events } from '@/db/schema';
-import { users } from '@/db/schema';
 import { auth } from '@/auth';
 import { getCurrentUser } from '@/lib/dal';
 

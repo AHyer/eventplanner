@@ -26,7 +26,14 @@ export const ageBracketEnum = pgEnum("age_bracket", ["under_18", "18_24", "25_34
 export const educationLevelEnum = pgEnum("education_level", ["less_than_high_school", "high_school", "some_college", "trade_school", "associates", "bachelors", "masters", "professional", "doctorate"]);
 export const profileGenderEnum = pgEnum("profile_gender", ["mixed", "mostly_women", "mostly_men", "all_women", "all_men", "unspecified"]); //describes the guest list as a whole, not one person
 export const dietaryRestrictionEnum = pgEnum("dietary_restriction", ["none", "gluten_free", "dairy_free", "nut_free", "shellfish_free", "vegetarian", "vegan", "pescatarian", "kosher", "halal", "other"]);
-export const inviteMethodEnum = pgEnum("invite_method", ["email", "text", "paper", "other"]);
+export const inviteMethodEnum = pgEnum("invite_method", ["email", "text", "paper", "other"]); //TODO should this be per guest, or per event?
+export const taskCategoryEnum = pgEnum("task_category", ["venue", "catering", "decor", "music", "guests"]);  //TODO expand
+export const visibilityEnum = pgEnum("visibility", ["host_only", "subhosts", "vendors"]); //max level of visibility for a task, note, or other item
+export const taskContextEnum = pgEnum("task_context", ["errands", "kitchen", "yard", "computer", "phone"]); //where task will be executed //TODO expand
+export const taskPriorityEnum = pgEnum("task_priority", ["1", "2", "3", "4", "5"]); //1-5, 1 is highest priority
+export const assignedTaskRoleEnum = pgEnum("assigned_task_role", ["host", "subhost", "vendor"]); 
+export const taskTagsEnum = pgEnum("task_tags", ["venue", "catering", "decor", "music", "guests"]);  //TODO expand or allow user to specify?
+
 
 export const users = pgTable("users", { //strictly visible to host(s) users only
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "users_id_identity_seq" }), 
@@ -66,6 +73,7 @@ export const events = pgTable("events", { //strictly visible to host(s) users on
   hostHelpers: integer("host_helpers"),
   hireOutTasks: hireOutTasksEnum("hire_out_tasks"),
   idealEventDesc: text("ideal_event_desc"),
+  guestListVisibleToGuests: boolean("guest_list_visible_to_guests").default(false), //if true, each guest can choose if their name is visible to other guests
   eventStatus: eventStatusEnum("event_status"), 
   createdAt: timestamp("created_at").defaultNow().notNull(), 
 });
@@ -112,7 +120,8 @@ export const guests = pgTable("guests", {
   guestAddress: text("guest_address"),
   guestDietaryRestrictions: dietaryRestrictionEnum("dietary_restrictions"),
   guestStatus: guestStatusEnum("guest_status"), 
-  totalCostPerGuest: decimal("total_cost_per_guest", { precision: 10, scale: 2 }),  //form budget vs. from aspects chosen
+  allowVisibleToGuests: boolean("allow_visible_to_guests").default(false), //if true, guest name is visible to other guests (unless host has blocked guest list visibility to guests)
+  totalCostPerGuest: decimal("total_cost_per_guest", { precision: 10, scale: 2 }),  //from budget vs. from aspects chosen
   createdAt: timestamp("created_at").defaultNow().notNull(), 
 });
 
@@ -122,11 +131,16 @@ export const guests = pgTable("guests", {
 export const tasks = pgTable("tasks", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "tasks_id_identity_seq" }), 
   eventId: integer("eventId").notNull().references(() => events.id, {onDelete: 'cascade' }),
-  eventName: varchar("name").notNull(),
-  dueDate: timestamp("due_date"),
+  taskName: varchar("task_name").notNull(),
+  dueDate: timestamp("task_due_date"),
   taskStatus: taskStatusEnum("task_status"), 
-  assignedRole: varchar("assigned_role"),
-  createdAt: timestamp("created_at").defaultNow().notNull(), 
+  taskCategory: taskCategoryEnum("task_category"), //e.g., "venue", "catering", "decor", "music", "guests", etc.  
+  taskTags: text("task_tags"), //comma-separated list of tags  //TODO make enum -- or should this be user-supplied?  //TODO make a separate table for tags and a many-to-many relationship between tasks and tags
+  taskContext: taskContextEnum("task_context"), //where task will be executed, i.e. errands, kitchen, yard, at computer, on phone 
+  taskPriority: taskPriorityEnum("task_priority"), //1-5, 1 is highest priority
+  assignedTaskRole: assignedTaskRoleEnum("assigned_task_role"),  //host, subhost, vendor, etc.  
+  taskVisibility: visibilityEnum("task_visibility"), //host only, subhosts, vendor, all of these //TODO make enum
+  taskCreatedAt: timestamp("task_created_at").defaultNow().notNull(), 
 });
 
 //each host could have their own task list OR primary host creates list and shares/delegates
@@ -135,14 +149,14 @@ export const tasks = pgTable("tasks", {
 export const notes = pgTable("notes", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "notes_id_identity_seq" }), 
   eventId: integer("event_id").notNull().references(() => events.id, {onDelete: 'cascade' }),
-  name: varchar("name").notNull(),
-  body: text("body"),
+  noteName: varchar("note_name"),
+  noteBody: text("note_body").notNull(),
   noteStatus: noteStatusEnum("note_status"),  
-  authorRole: varchar("author_role").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(), 
+  noteAuthorRole: varchar("note_author_role").notNull(),
+  noteCreatedAt: timestamp("note_created_at").defaultNow().notNull(), 
 });
 
-//each host and each vendor can have notes
+//each host, subhost, and each ?vendor can have notes
 
 export const menu = pgTable("menu", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "menu_id_identity_seq" }), 
@@ -150,76 +164,79 @@ export const menu = pgTable("menu", {
   eventId: integer("event_id").notNull().references(() => events.id, {onDelete: 'cascade' }),
   menuDescr: varchar("menu_descr"),
   menuStatus: menuStatusEnum("menu_status"),  
-  createdAt: timestamp("created_at").defaultNow().notNull(), 
+  menuCreatedAt: timestamp("menu_created_at").defaultNow().notNull(), 
 });
 
 //visible to host(s) and any vendor/helper involved with the menu
 
-export const deco = pgTable("deco", {
-  id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "deco_id_identity_seq" }), 
-  vendorId: varchar("vendor_id"),
-  eventId: integer("event_id").notNull().references(() => events.id, {onDelete: 'cascade' }),
-  decoDescr: varchar("deco_descr"),
-  decoStatus: decoStatusEnum("deco_status"),  
-  createdAt: timestamp("created_at").defaultNow().notNull(), 
-});
-
-//visible to host(s) and any vendor/helper involved with the decorations
-
-export const drink_menu = pgTable("drink_menu", {
+export const drink_menu = pgTable("drink_menu", { //can be only one drink menu for each menu, but can have multiple drink recipes per drink menu
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "drink_menu_id_identity_seq" }), 
   vendor_id: varchar("vendor_id"),
-  menu_id: integer("menu_id").notNull().notNull().references(() => menu.id),
+  menu_id: integer("menu_id").notNull().references(() => menu.id),
   drink_menu_descr: varchar("drink_menu_descr"),
   drinkMenuStatus: drinkMenuStatusEnum("drink_menu_status"), 
-  created_at: timestamp("created_at").defaultNow().notNull(), 
+  drinkMenuCreatedAt: timestamp("drink_menu_created_at").defaultNow().notNull(), 
 });
 
-//TODO food and drink recipes should persist even if not associated with an event (for re-use)
-export const drink_recipe = pgTable("drink_recipe", {
+//TODO food and drink recipes should persist even if not associated with an event (for re-use) -- do not cascade delete on menu deletion, but allow host to delete recipes if they want to
+export const drink_recipe = pgTable("drink_recipe", { //can be multiple drink recipes per menu, but only one drink recipe per drink
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "drink_recipe_id_identity_seq" }), 
-  drinkMenuId: integer("drink_menu_id").notNull().notNull().notNull().references(() => drink_menu.id),
+  drinkMenuId: integer("drink_menu_id").notNull().references(() => drink_menu.id),
   drinkRecipeDescr: varchar("drink_recipe_descr"),
-  drinkIngredients: text("drink_ingerdients"),
+  drinkIngredients: text("drink_ingredients"),
   drinkRecipeStatus: drinkRecipeStatusEnum("drink_recipe_status"), 
-  createdAt: timestamp("created_at").defaultNow().notNull(), 
+  drinkRecipeCreatedAt: timestamp("drink_recipe_created_at").defaultNow().notNull(), 
 });
 
-export const main_dish = pgTable("main_dish", {
+export const main_dish = pgTable("main_dish", { //can be multiple main dishes per menu, but only one main dish recipe per main dish
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "main_dish_id_identity_seq" }), 
-  menuId: integer("menu_id").notNull().notNull().references(() => menu.id),
+  menuId: integer("menu_id").notNull().references(() => menu.id),
   MDRecipeDescr: varchar("m_d_recipe_descr"),
   MDIngredients: text("m_d_ingredients"),
   mainDishStatus: mainDishStatusEnum("main_dish_status"),  
   //mainDishImage
-  createdAt: timestamp("created_at").defaultNow().notNull(), 
+  menuCreatedAt: timestamp("main_menu_created_at").defaultNow().notNull(), 
 });
 
-export const side_dish = pgTable("side_dish", {
+export const side_dish = pgTable("side_dish", { //can be multiple side dishes per menu, but only one side dish recipe per side dish
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "side_dish_id_identity_seq" }), 
-  menuId: integer("menu_id").notNull().notNull().references(() => menu.id),
+  menuId: integer("menu_id").notNull().references(() => menu.id),
   SDRecipeDescr: varchar("s_d_recipe_descr"),
   SDIngredients: text("s_d_ingredients"),
   sideDishStatus: sideDishStatusEnum("side_dish_status"),  
-  createdAt: timestamp("created_at").defaultNow().notNull(), 
+  sideDishCreatedAt: timestamp("side_dish_created_at").defaultNow().notNull(), 
 });
 
-export const dessert = pgTable("dessert", {
+export const dessert = pgTable("dessert", { //can be multiple desserts per menu, but only one dessert recipe per dessert
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "dessert_id_identity_seq" }), 
-  menuId: integer("menu_id").notNull().notNull().references(() => menu.id),
+  menuId: integer("menu_id").notNull().references(() => menu.id),
   dessertRecipeDescr: varchar("dessert_recipe_descr"),
   dessertIngredients: text("dessert_ingredients"),
   dessertStatus: dessertStatusEnum("dessert_status"),
-  createdAt: timestamp("created_at").defaultNow().notNull(), 
+  dessertCreatedAt: timestamp("dessert_created_at").defaultNow().notNull(), 
 });
 
-export const deco_group = pgTable("deco_group", {
+export const deco = pgTable("deco", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "deco_id_identity_seq" }), 
+  decoGroupId: integer("deco_group_id").notNull().references(() => deco_group.id),  //which group this deco piece belongs to //TODO should null be allowed?
+  vendorId: varchar("vendor_id"),
+  eventId: integer("event_id").notNull().references(() => events.id, {onDelete: 'cascade' }),
+  decoDescr: varchar("deco_descr"),
+  decoStatus: decoStatusEnum("deco_status"),  
+  decoCreatedAt: timestamp("deco_created_at").defaultNow().notNull(), 
+});
+
+//visible to host(s) and any vendor/helper involved with the decorations
+
+export const deco_group = pgTable("deco_group", { //can be multiple deco pieces per deco group 
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "deco_group_id_identity_seq" }), 
-  decoId: integer("deco_id").notNull().notNull().references(() => deco.id),
+  //decoId: integer("deco_id").notNull().references(() => deco.id), //TODO make this a list of deco ids instead of just one deco id
   decoGroupDescr: varchar("deco_group_descr"),
-  decoGroupArea: varchar("deco_group_area"),
-  decoGroupStatus: decoGroupStatusEnum("deco_grooup_status"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  decoGroupArea: varchar("deco_group_area"),  //physical placement at event site - tie to keyed map of event site? (e.g., "main table", "bar", "dance floor", "entrance", etc.)
+  decoGroupStatus: decoGroupStatusEnum("deco_group_status"),
+  decoGroupCreatedAt: timestamp("deco_group_created_at").defaultNow().notNull(),
 });
 
 //TODO create table for music playlist -- allow guests to request music?
+
+//TODO allow users to export taks list, notes, menu, and deco to PDF or CSV for printing or sharing with vendors/helpers and importing to related platforms

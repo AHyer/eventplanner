@@ -1,5 +1,5 @@
 // src/app/guests/page.tsx
-// The host's guest list: every guest across their events, with RSVP status.
+// The host's guest list: every guest across each events, with RSVP status.
 
 import { db } from '@/db';
 import { events } from '@/db/schema';
