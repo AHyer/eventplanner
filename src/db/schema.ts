@@ -4,18 +4,13 @@ import { pgTable, serial, text, integer, varchar, timestamp, boolean, decimal, j
 //TODO make dropdowns for all enums on pages
 export const userRoleEnum = pgEnum("role", ["host", "vendor", "guest"]);
 //status enums:
-export const eventStatusEnum = pgEnum("event_status", ["future", "active", "archived"]);
+export const eventStatusEnum = pgEnum("event_status", ["future", "active", "cancelled", "archived"]);
 export const vendorStatusEnum = pgEnum("vendor_status", ["considering", "estimate", "hired"]);
 export const guestStatusEnum = pgEnum("guest_status", ["invited", "accepted", "declined"]);
 export const taskStatusEnum = pgEnum("task_status", ["not_started", "in_progress", "done"]);
 export const noteStatusEnum = pgEnum("note_status", ["future", "active", "archived"]);
-export const menuStatusEnum = pgEnum("menu_status", ["considering", "using", "archived"]);
+export const menuStatusEnum = pgEnum("menu_recipe_status", ["considering", "using", "archived"]);
 export const decoStatusEnum = pgEnum("deco_status", ["considering", "using", "archived"]);
-export const drinkMenuStatusEnum = pgEnum("drink_menu_status", ["considering", "using", "archived"]);
-export const drinkRecipeStatusEnum = pgEnum("drink_recipe_status", ["considering", "using", "archived"]);
-export const mainDishStatusEnum = pgEnum("main_dish_status", ["considering", "using", "archived"]);
-export const sideDishStatusEnum = pgEnum("side_dish_status", ["considering", "using", "archived"]);
-export const dessertStatusEnum = pgEnum("dessert_status", ["considering", "using", "archived"]);
 export const decoGroupStatusEnum = pgEnum("deco_group_status", ["considering", "using", "archived"]);
 export const hireOutTasksEnum = pgEnum("hire_out_tasks", ["none", "catering", "setup", "pre-cleaning", "post-cleaning"]);
 //bucket enums: values are the breakpoint itself, pages map them to display labels ("2500" -> "$2,500")
@@ -26,9 +21,9 @@ export const ageBracketEnum = pgEnum("age_bracket", ["under_18", "18_24", "25_34
 export const educationLevelEnum = pgEnum("education_level", ["less_than_high_school", "high_school", "some_college", "trade_school", "associates", "bachelors", "masters", "professional", "doctorate"]);
 export const profileGenderEnum = pgEnum("profile_gender", ["mixed", "mostly_women", "mostly_men", "all_women", "all_men", "unspecified"]); //describes the guest list as a whole, not one person
 export const dietaryRestrictionEnum = pgEnum("dietary_restriction", ["none", "gluten_free", "dairy_free", "nut_free", "shellfish_free", "vegetarian", "vegan", "pescatarian", "kosher", "halal", "other"]);
-export const inviteMethodEnum = pgEnum("invite_method", ["email", "text", "paper", "other"]); //TODO should this be per guest, or per event?
+export const inviteMethodEnum = pgEnum("invite_method", ["email", "text", "phone", "paper", "mail", "in_person"]); //TODO should this be per guest, or per event?
 export const taskCategoryEnum = pgEnum("task_category", ["venue", "catering", "decor", "music", "guests"]);  //TODO expand
-export const visibilityEnum = pgEnum("visibility", ["host_only", "subhosts", "vendors"]); //max level of visibility for a task, note, or other item
+export const visibilityEnum = pgEnum("visibility", ["host_only", "subhosts", "vendors"]); //max level of visibility for a task, note, or other item--general for mutiple tables
 export const taskContextEnum = pgEnum("task_context", ["errands", "kitchen", "yard", "computer", "phone"]); //where task will be executed //TODO expand
 export const taskPriorityEnum = pgEnum("task_priority", ["1", "2", "3", "4", "5"]); //1-5, 1 is highest priority
 export const assignedTaskRoleEnum = pgEnum("assigned_task_role", ["host", "subhost", "vendor"]); 
@@ -39,7 +34,7 @@ export const users = pgTable("users", { //strictly visible to host(s) users only
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "users_id_identity_seq" }), 
   googleSub: varchar("google_sub").unique(),   // unique stable Google identity, needed for perssitence
   username: varchar("username").notNull(),  //.unique() dropped for now to allow multiple users with same name (e.g., John Smith) but unique email
-  email: varchar("email").notNull().unique(),
+  email: varchar("email").notNull().unique(),  //TODO validate
   role: userRoleEnum("role").notNull().default("guest"), //default will have minimal permissions
   createdAt: timestamp("created_at").defaultNow().notNull(), 
 });
@@ -53,28 +48,36 @@ export const events = pgTable("events", { //strictly visible to host(s) users on
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "events_id_identity_seq" }), 
   userId: integer("user_id").notNull().references(() => users.id),
   eventName: varchar("event_name"),
-  eventDate: date("event_date"),
-  eventDateMax: date("event_date_max"),
-  eventDateMin: date("event_date_min"),
+  eventDate: date("event_date"),  //TODO validate
+  eventDateMax: date("event_date_max"),  //TODO validate
+  eventDateMin: date("event_date_min"),  //TODO validate
   outside: boolean("outside").default(false),
   alcoholServed: boolean("alcohol_served").default(false),
   eventVenue: varchar("event_venue"),
-  venueAddress: varchar("venue_address"),
-  venueZipCode: varchar("venue_zip"), //validate
+  venueStreetAddress: varchar("venue_street_address"),  //TODO validate  
+  venueCity: varchar("venue_city"),  //TODO validate
+  venueState: varchar("venue_state"),  //TODO validate
+  venueCountry: varchar("venue_country"),  //TODO validate
+  venueZipCode: varchar("venue_zip"),   //TODO validate
+  venueWebsite: varchar("venue_website"),  //TODO validate
+  venueContactPhone: varchar("venue_contact_phone"),  //TODO validate
+  venueContactEmail: varchar("venue_contact_email"),  //TODO validate
   eventVibe: text("event_vibe"),
   totalBudgetMax: budgetAmountEnum("total_budget_max"),
   totalBudgetMin: budgetAmountEnum("total_budget_min"),
-  numGuests: integer("num_guests"),
+  numGuests: integer("num_guests"), //after vuest list finalized
   guestsMaxNum: integer("max_num_guests"),  
   guestsMinNum: integer("min_num_guests"),
   inviteMethod: inviteMethodEnum("invite_method"), //email, text, paper, other
-  //guestsAttending: integer //calculated from guest table > guest status
+  //guestsAttending: integer //TODO calculated from guest table > guest status
   hostLaborPortion: hostLaborPortionEnum("host_labor_portion"), //percentage
   hostHelpers: integer("host_helpers"),
   hireOutTasks: hireOutTasksEnum("hire_out_tasks"),
   idealEventDesc: text("ideal_event_desc"),
   guestListVisibleToGuests: boolean("guest_list_visible_to_guests").default(false), //if true, each guest can choose if their name is visible to other guests
-  eventStatus: eventStatusEnum("event_status"), 
+  guestsDietaryRestrictions: dietaryRestrictionEnum("guests_dietary_restrictions"), //'guests' plural for this table; if any guest reports a dietary restriction, this field will be set to that restriction (e.g., if one guest is vegan, this field will be set to 'vegan' even if other guests are not vegan)
+  guestsSpecAccom: text("guest_spec_accom"),  //e.g., wheelchair access, etc.-- 'guests' plural for this table; if any guest reports need for special accomodations, this field will be set to that need (e.g., if one guest needs wheelchair access, this field will be set to 'wheelchair access' even if other guests do not need it) //TODO create enum?
+  eventStatus: eventStatusEnum("event_status"),   //TODO depending on whether event date has passed
   createdAt: timestamp("created_at").defaultNow().notNull(), 
 });
 
@@ -85,11 +88,13 @@ export const event_guests_profile = pgTable("event_guests_profile", { //strictly
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "g_profile_id_identity_seq" }), 
   eventId: integer("event_id").notNull().references(() => events.id, {onDelete: 'cascade' }), //FK -- delete associated data when evetn is deleted
   profileGender: profileGenderEnum("profile_gender"),
+  // profileGenderFemale: profileGenderEnum("profile_gender_female_percentage"), //TODO  change enum
+  // profileGenderMale: profileGenderEnum("profile_gender_male_percentage"),
+  // profileGenderNonbinary: profileGenderEnum("profile_gender_nonbinary_percentage"),
   profileEducationMin: educationLevelEnum("profile_education_min"),
   profileEducationMax: educationLevelEnum("profile_education_max"),
   profileMaxAge: ageBracketEnum("profile_max_age"),
   profileMinAge: ageBracketEnum("profile_min_age"),
-  guestsDietaryRestrictions: dietaryRestrictionEnum("profile_guests_dietary_restrictions"),
   guestsProfileDesc:  text("guests_profile_desc"),
   createdAt: timestamp("created_at").defaultNow().notNull(), 
 });
@@ -99,11 +104,20 @@ export const event_guests_profile = pgTable("event_guests_profile", { //strictly
 
 export const vendors = pgTable("vendors", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "vendor_id_identity_seq" }), 
-  vendorName: varchar("vendor_name"),
-  vendorPhone: text("vendor_phone"),
-  vendorEmail: text("vendor_email"),
-  vendorEstimate: decimal("vendor_estimate", { precision: 10, scale: 2 }),
   eventId: integer("event_id").notNull().references(() => events.id),
+  vendorName: varchar("vendor_name"),
+  vendorPhone: text("vendor_phone"),  //TODO validate phone number format
+  vendorEmail: text("vendor_email"),  //TODO validate email format
+  vendorStreetAddress: text("vendor_street_address"),  //TODO validate
+  vendorCity: varchar("vendor_city"),  //TODO validate
+  vendorState: varchar("vendor_state"),  //TODO validate
+  vendorCountry: varchar("vendor_country"),  //TODO validate
+  vendorZipCode: varchar("vendor_zip"),  //TODO validate
+  vendorType: varchar("vendor_type"), //caterer, decorator, musician, etc.  //TODO make enum
+  vendorWebsite: text("vendor_website"),  //TODO validate
+  vendorNotes: text("vendor_notes"),  //e.g. vendor meetimng transcripts, etc.
+  vendorEstimateHigh: decimal("vendor_estimate_high", { precision: 10, scale: 2 }),
+  vendorEstimateLow: decimal("vendor_estimate_low", { precision: 10, scale: 2 }),
   vendorStatus: vendorStatusEnum("vendor_status"), 
   createdAt: timestamp("created_at").defaultNow().notNull(), 
 });
@@ -115,10 +129,15 @@ export const guests = pgTable("guests", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "guests_id_identity_seq" }), 
   eventId: integer("event_id").notNull().references(() => events.id, {onDelete: 'cascade' }),
   guestName: varchar("guest_name"),
-  guestPhone: text("guest_phone"),
-  guestEmail: text("guest_email"),
-  guestAddress: text("guest_address"),
+  guestPhone: text("guest_phone"), //TODO validate
+  guestEmail: text("guest_email"),   //TODO validate
+  guestAddress: text("guest_street_address"),   //TODO validate
+  guestCity: varchar("guest_city"),  //TODO validate
+  guestState: varchar("guest_state"),  //TODO validate
+  guestCountry: varchar("guest_country"),  //TODO validate
+  guestZipCode: varchar("guest_zip"),  //TODO validate
   guestDietaryRestrictions: dietaryRestrictionEnum("dietary_restrictions"),
+  guestSpecAccom: text("guest_spec_accom"),  //e.g., wheelchair access, etc.
   guestStatus: guestStatusEnum("guest_status"), 
   allowVisibleToGuests: boolean("allow_visible_to_guests").default(false), //if true, guest name is visible to other guests (unless host has blocked guest list visibility to guests)
   totalCostPerGuest: decimal("total_cost_per_guest", { precision: 10, scale: 2 }),  //from budget vs. from aspects chosen
@@ -134,6 +153,7 @@ export const tasks = pgTable("tasks", {
   taskName: varchar("task_name").notNull(),
   dueDate: timestamp("task_due_date"),
   taskStatus: taskStatusEnum("task_status"), 
+  taskNote: text("task_note"),
   taskCategory: taskCategoryEnum("task_category"), //e.g., "venue", "catering", "decor", "music", "guests", etc.  
   taskTags: text("task_tags"), //comma-separated list of tags  //TODO make enum -- or should this be user-supplied?  //TODO make a separate table for tags and a many-to-many relationship between tasks and tags
   taskContext: taskContextEnum("task_context"), //where task will be executed, i.e. errands, kitchen, yard, at computer, on phone 
@@ -174,7 +194,7 @@ export const drink_menu = pgTable("drink_menu", { //can be only one drink menu f
   vendor_id: varchar("vendor_id"),
   menu_id: integer("menu_id").notNull().references(() => menu.id),
   drink_menu_descr: varchar("drink_menu_descr"),
-  drinkMenuStatus: drinkMenuStatusEnum("drink_menu_status"), 
+  drinkMenuStatus: menuStatusEnum("drink_menu_status"), 
   drinkMenuCreatedAt: timestamp("drink_menu_created_at").defaultNow().notNull(), 
 });
 
@@ -183,8 +203,9 @@ export const drink_recipe = pgTable("drink_recipe", { //can be multiple drink re
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "drink_recipe_id_identity_seq" }), 
   drinkMenuId: integer("drink_menu_id").notNull().references(() => drink_menu.id),
   drinkRecipeDescr: varchar("drink_recipe_descr"),
-  drinkIngredients: text("drink_ingredients"),
-  drinkRecipeStatus: drinkRecipeStatusEnum("drink_recipe_status"), 
+  drinkRecipeInstructions: varchar("drink_recipe_instructions"),
+  drinkIngredients: text("drink_ingredients"),  //TODO validate ingredients format (e.g., "1 oz vodka, 1 oz lime juice, 1 tsp sugar"), allows for making global ingredient list for shopping
+  drinkRecipeStatus: menuStatusEnum("drink_recipe_status"), 
   drinkRecipeCreatedAt: timestamp("drink_recipe_created_at").defaultNow().notNull(), 
 });
 
@@ -192,8 +213,9 @@ export const main_dish = pgTable("main_dish", { //can be multiple main dishes pe
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "main_dish_id_identity_seq" }), 
   menuId: integer("menu_id").notNull().references(() => menu.id),
   MDRecipeDescr: varchar("m_d_recipe_descr"),
-  MDIngredients: text("m_d_ingredients"),
-  mainDishStatus: mainDishStatusEnum("main_dish_status"),  
+  MDRecipeInstructions: varchar("m_d_recipe_instructions"),
+  MDIngredients: text("m_d_ingredients"),  //TODO validate ingredients format
+  mainDishStatus: menuStatusEnum("main_dish_status"),  
   //mainDishImage
   menuCreatedAt: timestamp("main_menu_created_at").defaultNow().notNull(), 
 });
@@ -202,8 +224,9 @@ export const side_dish = pgTable("side_dish", { //can be multiple side dishes pe
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "side_dish_id_identity_seq" }), 
   menuId: integer("menu_id").notNull().references(() => menu.id),
   SDRecipeDescr: varchar("s_d_recipe_descr"),
-  SDIngredients: text("s_d_ingredients"),
-  sideDishStatus: sideDishStatusEnum("side_dish_status"),  
+  SDRecipeInstructions: varchar("s_d_recipe_instructions"),
+  SDIngredients: text("s_d_ingredients"),  //TODO validate ingredients format
+  sideDishStatus: menuStatusEnum("side_dish_status"),  
   sideDishCreatedAt: timestamp("side_dish_created_at").defaultNow().notNull(), 
 });
 
@@ -211,8 +234,9 @@ export const dessert = pgTable("dessert", { //can be multiple desserts per menu,
   id: integer("id").primaryKey().generatedAlwaysAsIdentity({ name: "dessert_id_identity_seq" }), 
   menuId: integer("menu_id").notNull().references(() => menu.id),
   dessertRecipeDescr: varchar("dessert_recipe_descr"),
-  dessertIngredients: text("dessert_ingredients"),
-  dessertStatus: dessertStatusEnum("dessert_status"),
+  dessertRecipeInstructions: varchar("dessert_recipe_instructions"),
+  dessertIngredients: text("dessert_ingredients"),  //TODO validate ingredients format
+  dessertStatus: menuStatusEnum("dessert_status"),
   dessertCreatedAt: timestamp("dessert_created_at").defaultNow().notNull(), 
 });
 

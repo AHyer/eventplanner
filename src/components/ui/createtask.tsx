@@ -20,6 +20,7 @@ export async function addTask(
   const taskName = formData.get('task_name') as string | null;
   const dueDate = formData.get('due_date') as string | null;
   const taskStatus = formData.get('task_status') as string | null;
+  const taskNote = formData.get('task_note') as string | null;
   const taskCategory = formData.get('task_category') as string | null;
   const taskTags = formData.get('task_tags') as string | null;
   const taskContext = formData.get('task_context') as string | null;
@@ -55,6 +56,7 @@ export async function addTask(
       taskStatus: (taskStatus || undefined) as typeof tasks.taskStatus.enumValues[number] | undefined,
       taskCategory: (taskCategory || undefined) as typeof tasks.taskCategory.enumValues[number] | undefined,
       taskTags: taskTags || undefined,
+      taskNote: taskNote || undefined,
       taskContext: (taskContext || undefined) as typeof tasks.taskContext.enumValues[number] | undefined,
       taskPriority: (taskPriority || undefined) as typeof tasks.taskPriority.enumValues[number] | undefined,
       assignedTaskRole: (assignedTaskRole || undefined) as typeof tasks.assignedTaskRole.enumValues[number] | undefined,

@@ -31,3 +31,7 @@ export default async function FoodPage() {  // function = component ;  returns U
 
 //goal: scrape user-chosen recipes & images from web and/or recipe saving sites
 //incorporate AI to suggest recipes/menus based on user-supplied data about the events and it's guests
+
+//TODO calculate total time requored to make recipes
+//TODO construct grocery list from ingredients in recipes, with ability to filter by recipe, dish type, or ingredient
+

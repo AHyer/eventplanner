@@ -4,6 +4,11 @@
 
 import { useActionState } from 'react';
 import {createEvent} from './createevent';
+import { EnumSelect } from './enum-select';
+import {
+  dietaryRestrictionOptions,
+  inviteMethodOptions
+} from './enum-options';
 
 const initialState = { success: false, message: '' };
 
@@ -27,7 +32,6 @@ export default function CreateEventForm({
             name="eventname"
             className="form-box"
             required
-            //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}   //input box
           />
         </div>
 
@@ -39,8 +43,6 @@ export default function CreateEventForm({
             name="eventdate"
             defaultValue={defaultDate ?? ''} //pre-filled from /calendar, still editable
             className="form-box"
-
-            //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}
           />
         </div>
 
@@ -51,23 +53,90 @@ export default function CreateEventForm({
             id="eventvenue"
             name="eventvenue"
             className="form-box"
-            
-            //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}
           />
         </div>
 
         <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="venueaddress" style={{ display: 'block', marginBottom: '5px' }}>Venue Address:</label>
+          <label htmlFor="venuestreetaddress" style={{ display: 'block', marginBottom: '5px' }}>Venue Street Address:</label>
           <input
             type="text"
-            id="venueaddress"
-            name="venueaddress"
+            id="venuestreetaddress"
+            name="venuestreetaddress"
             className="form-box"
-            
-            //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}
           />
         </div>
-        {/* TODO break address up into parts, validate */}
+
+        <div style={{ marginBottom: '15px' }}>
+          <label htmlFor="venuecity" style={{ display: 'block', marginBottom: '5px' }}>Venue City:</label>
+          <input
+            type="text"
+            id="venuecity"
+            name="venuecity"
+            className="form-box"
+          />
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label htmlFor="venuestate" style={{ display: 'block', marginBottom: '5px' }}>Venue State:</label>
+          <input
+            type="text"
+            id="venuestate"
+            name="venuestate"
+            className="form-box"
+          />
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label htmlFor="venuecountry" style={{ display: 'block', marginBottom: '5px' }}>Venue Country:</label>
+          <input
+            type="text"
+            id="venuecountry"
+            name="venuecountry"
+            className="form-box"
+          />
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label htmlFor="venuezipcode" style={{ display: 'block', marginBottom: '5px' }}>Venue Zip Code:</label>
+          <input
+            type="text"
+            id="venuezipcode"
+            name="venuezipcode"
+            className="form-box"
+          />
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label htmlFor="venewebsite" style={{ display: 'block', marginBottom: '5px' }}>Venue Website:</label>
+          <input
+            type="text"
+            id="venewebsite"
+            name="venewebsite"
+            className="form-box"
+          />
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label htmlFor="venuecontactphone" style={{ display: 'block', marginBottom: '5px' }}>Venue Contact Phone:</label>
+          <input
+            type="text"
+            id="venuecontactphone"
+            name="venuecontactphone"
+            className="form-box"
+          />
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label htmlFor="venuecontactemail" style={{ display: 'block', marginBottom: '5px' }}>Venue Contact Email:</label>
+          <input    
+            type="text"
+            id="venuecontactemail"
+            name="venuecontactemail"
+            className="form-box"
+          />
+        </div>
+        
+        
 
         <div style={{ marginBottom: '15px' }}>
           <label htmlFor="eventvibe" style={{ display: 'block', marginBottom: '5px' }}>Event Vibe:</label>
@@ -77,19 +146,16 @@ export default function CreateEventForm({
             name="eventvibe"
             className="form-box"
             placeholder='describe the general vibe you would like for your event'
-            //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}
           />
         </div>
 
          <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="numguests" style={{ display: 'block', marginBottom: '5px' }}>Number of guests to be invited:</label>
+          <label htmlFor="numguests" style={{ display: 'block', marginBottom: '5px' }}>Number of guests invited:</label>
           <input
             type="text"
             id="numguests"
             name="numguests"
             className="form-box"
-            
-            //style={{ width: '100%', padding: '12px', boxSizing: 'border-box', background: '#fff', border: 'rounded-md' }}
           />
         </div>
 
@@ -124,6 +190,36 @@ export default function CreateEventForm({
             type="radio"
             id="alcoholserved"
             name="alcoholserved"
+            value="false"
+            className="radio-button"
+          />No
+        </div>
+
+        <EnumSelect
+                  name="invite_method"
+                  label="In general, how would you like to invite guests to your event?"
+                  options={inviteMethodOptions}
+                />
+
+        <EnumSelect
+                  name="guestsdietaryrestrictions"
+                  label="Do your guests have any dietary restrictions?"
+                  options={dietaryRestrictionOptions}
+                />
+
+        <div style={{ marginBottom: '15px' }}>
+          <label htmlFor="guestlistvisibletoguests" style={{ display: 'block', marginBottom: '5px' }}>Would you like the guest list to be visible to all guests?</label>
+          <input
+            type="radio"
+            id="guestlistvisibletoguests"
+            name="guestlistvisibletoguests"
+            value="true"
+            className="radio-button"
+          />Yes
+           <input
+            type="radio"
+            id="guestlistvisibletoguests"
+            name="guestlistvisibletoguests"
             value="false"
             className="radio-button"
           />No
