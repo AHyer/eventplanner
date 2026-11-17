@@ -49,5 +49,6 @@ export default async function ListTasks({ userId }: { userId: number }) {
     </section>
   );    
 
-
 }
+
+//TODO sort tasks by event date, then task name; add ability to filter by status (done, pending, etc.)

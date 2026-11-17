@@ -22,57 +22,109 @@ export function EditEventForm({ event }: { event: Event }) {
       <input type="hidden" name="id" value={event.id} />
 
       <div style={{ marginBottom: '15px' }}>
-        <label htmlFor="event_name" style={{ display: 'block', marginBottom: '5px' }}>
+        <label htmlFor="eventname" style={{ display: 'block', marginBottom: '5px' }}>
           Event Name:
         </label>
         <input
           type="text"
-          id="event_name"
-          name="event_name"
+          id="eventname"
+          name="eventname"
           defaultValue={event.eventName ?? ''} //defaultValue pre-fills the field while still letting the user type over it normally; value alone (without onChange) would make it read-only/frozen
-          className="w-full border border-slate-300 rounded-md px-4 py-3"
+          className="form-box"
           required
         />
       </div>
 
       <div style={{ marginBottom: '15px' }}>
-        <label htmlFor="event_date" style={{ display: 'block', marginBottom: '5px' }}>
+        <label htmlFor="eventdate" style={{ display: 'block', marginBottom: '5px' }}>
           Event Date:
         </label>
         <input
           type="date"
-          id="event_date"
-          name="event_date"
+          id="eventdate"
+          name="eventdate"
           defaultValue={event.eventDate ?? ''}
-          className="w-full border border-slate-300 rounded-md px-4 py-3"
+          className="form-box"
         />
       </div>
 
       <div style={{ marginBottom: '15px' }}>
-        <label htmlFor="event_venue" style={{ display: 'block', marginBottom: '5px' }}>
+        <label htmlFor="eventvenue" style={{ display: 'block', marginBottom: '5px' }}>
           Event Venue:
         </label>
         <input
           type="text"
-          id="event_venue"
-          name="event_venue"
+          id="eventvenue"
+          name="eventvenue"
           defaultValue={event.eventVenue ?? ''}
-          className="w-full border border-slate-300 rounded-md px-4 py-3"
+          className="form-box"
         />
       </div>
 
-      {/* budget is a budget_amount enum column now, so these have to be dropdowns —
-          a free-typed number would fail the insert */}
+      <div style={{ marginBottom: '15px' }}>
+        <label htmlFor="venuestreetaddress" style={{ display: 'block', marginBottom: '5px' }}>
+          Venue Street Address:
+        </label>
+        <input
+          type="text"
+          id="venuestreetaddress"
+          name="venuestreetaddress"
+          defaultValue={event.eventVenue ?? ''}
+          className="form-box"
+        />
+      </div>
+
+      <div style={{ marginBottom: '15px' }}>
+        <label htmlFor="venuecity" style={{ display: 'block', marginBottom: '5px' }}>
+          Venue City:
+        </label>
+        <input
+          type="text"
+          id="venuecity"
+          name="venuecity"
+          defaultValue={event.eventVenue ?? ''}
+          className="form-box"
+        />
+      </div>
+
+      <div style={{ marginBottom: '15px' }}>
+        <label htmlFor="venuestate" style={{ display: 'block', marginBottom: '5px' }}>
+          Venue State:
+        </label>
+        <input
+          type="text"
+          id="venuestate"
+          name="venuestate"
+          defaultValue={event.eventVenue ?? ''}
+          className="form-box"
+        />
+      </div>
+
+      {/* TODO add remaining column names */}
+
+      <div style={{ marginBottom: '15px' }}>
+        <label htmlFor="venuecountry" style={{ display: 'block', marginBottom: '5px' }}>
+          Venue Country:
+        </label>
+        <input
+          type="text"
+          id="venuecountry"
+          name="venuecountry"
+          defaultValue={event.eventVenue ?? ''}
+          className="form-box"
+        />
+      </div>
+
       <div style={{ display: 'flex', gap: '15px', marginBottom: '15px' }}>
         <EnumSelect
-          name="total_budget_min"
+          name="totalbudgetmin"
           label="Budget Min:"
           options={budgetAmountOptions}
           defaultValue={event.totalBudgetMin}
           className="flex-1"
         />
         <EnumSelect
-          name="total_budget_max"
+          name="totalbudgetmax"
           label="Budget Max:"
           options={budgetAmountOptions}
           defaultValue={event.totalBudgetMax}

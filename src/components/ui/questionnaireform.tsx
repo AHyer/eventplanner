@@ -39,8 +39,8 @@ export default function QuestionnaireForm() {
           <label htmlFor="eventDateMin" style={{ display: 'block', marginBottom: '5px' }}>What is the soonest date that you anticipate holding your event?</label>
           <input
             type="date" //automagically renders date picker
-            id="event_date_min"
-            name="event_date_min"
+            id="eventdatemin"
+            name="eventdatemin"
             className="w-full px-4 py-3 bg-white border border-slate-300 rounded-md shadow-sm"
           />
         </div>
@@ -49,8 +49,8 @@ export default function QuestionnaireForm() {
           <label htmlFor="eventDateMax" style={{ display: 'block', marginBottom: '5px' }}>What is the latest date that you anticipate holding your event?</label>
           <input
             type="date" 
-            id="event_date_max"
-            name="event_date_max"
+            id="eventdatemax"
+            name="eventdatemax"
             className="w-full px-4 py-3 bg-white border border-slate-300 rounded-md shadow-sm"
           />
         </div>
@@ -59,8 +59,8 @@ export default function QuestionnaireForm() {
           <label htmlFor="venueZipCode" style={{ display: 'block', marginBottom: '5px' }}>Please enter the zip code for your event:</label>  
           <input
             type="text"
-            id="venue_zip"
-            name="venue_zip"
+            id="venuezip"
+            name="venuezip"
             className="w-full px-4 py-3 bg-white border border-slate-300 rounded-md shadow-sm"    
           />
         </div>
@@ -68,13 +68,13 @@ export default function QuestionnaireForm() {
         {/* every field below writes to an enum column, so they are all dropdowns —
             the blank option means "not answered" and leaves the column null */}
         <EnumSelect
-          name="total_budget_min"
+          name="totalbudgetmin"
           label="At a minimum, what do you expect to spend on your event?"
           options={budgetAmountOptions}
         />
 
         <EnumSelect
-          name="total_budget_max"
+          name="totalbudgetmax"
           label="What is the most you are willing to spend?"
           options={budgetAmountOptions}
         />
@@ -96,32 +96,32 @@ export default function QuestionnaireForm() {
         </h3>
 
         <EnumSelect
-          name="profile_min_age"
+          name="profileminage"
           label="What is the youngest age group you expect among your guests?"
           options={ageBracketOptions}
         />
 
         <EnumSelect
-          name="profile_max_age"
+          name="profilemaxage"
           label="And the oldest age group?"
           options={ageBracketOptions}
         />
 
         <EnumSelect
-          name="profile_education_min"
-          label="What is the least amount of schooling your guests are likely to have?"
+          name="profileeducationmin"
+          label="What is the least amount of education your guests are likely to have?"
           options={educationLevelOptions}
         />
 
         <EnumSelect
-          name="profile_education_max"
+          name="profileeducationmax"
           label="And the most?"
           options={educationLevelOptions}
         />
 
         <EnumSelect
-          name="profile_guests_dietary_restrictions"
-          label="Do your guests have a dietary restriction to plan around?"
+          name="profileguestsdietaryrestrictions"
+          label="Do any of your guests have dietary restrictions?"
           options={dietaryRestrictionOptions}
         />
 

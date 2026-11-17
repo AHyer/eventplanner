@@ -42,6 +42,4 @@ export default async function ListEvents() {
   );
 }
 
-//TODO format date to be more readable--convert to date type and use {date.toLocaleDateString()}
-//TODO make upcoming events clickable for editing/deleting (opens event for editing)
 //TODO set up sync with Google/Outlook calendars

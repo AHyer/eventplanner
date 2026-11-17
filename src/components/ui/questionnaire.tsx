@@ -22,21 +22,25 @@ interface QuestionnaireInputs {
     eventDateMin?: string;
     outside?: string;
     alcoholServed?:  string;
-    venueZipCode?: string;
     eventVibe?:  string;
     totalBudgetMax?:  string;
     totalBudgetMin?:  string;
-    guestsMaxNum?:  string;
-    guestsMinNum?:  string;
     hostLaborPortion?:  string;
     hostHelpers?:  string;
     hireOutTasks?:  string;
     idealEventDesc?: string;
+    guestsMaxNum?:  string;
+    guestsMinNum?:  string;
+    inviteMethod: string;
+    profileGender?: string;
+    // profileGenderFemale?:  string;
+    // profileGenderMale?:  string;
+    // profileGenderNonbinary?:  string;
+    guestsDietaryRestrictions?:  string;
     profileEducationMin?:  string;
     profileEducationMax?:  string;
     profileMaxAge?:  string;
     profileMinAge?:  string;
-    guestsDietaryRestrictions?:  string;
     guestsProfileDesc?:   string;
 }
 
@@ -51,26 +55,29 @@ export async function questionnaire(prevState: unknown, formData: FormData
 const inputs: QuestionnaireInputs = {         //everything the user enters for this form (all strings)
     eventName: (formData.get('eventname') as string) ?? '',
 
-    eventDateMax: (formData.get('event_date_max') as string) || undefined,
-    eventDateMin: (formData.get('event_date_min') as string) || undefined,
+    eventDateMax: (formData.get('eventdatemax') as string) || undefined, //what we are 'getiing' must match html id & name
+    eventDateMin: (formData.get('eventdatemin') as string) || undefined,
     outside: (formData.get('outside') as string) || undefined,
-    alcoholServed:  (formData.get('alcohol_served') as string) || undefined,
-    venueZipCode: (formData.get('venue_zip') as string) || undefined,
-    eventVibe:  (formData.get('event_vibe') as string) || undefined,
-    totalBudgetMax:  (formData.get('total_budget_max') as string) || undefined,
-    totalBudgetMin:  (formData.get('total_budget_min') as string) || undefined,
-    guestsMaxNum:  (formData.get('max_num_guests') as string) || undefined,
-    guestsMinNum:  (formData.get('min_num_guests') as string) || undefined,
-    hostLaborPortion:  (formData.get('host_labor_portion') as string) || undefined,
-    hostHelpers:  (formData.get('host_helpers') as string) || undefined,
-    hireOutTasks:  (formData.get('hire_out_tasks') as string) || undefined,
-    idealEventDesc: (formData.get('ideal_event_desc') as string) || undefined,
-    profileEducationMin:  (formData.get('profile_education_min') as string) || undefined,
-    profileEducationMax:  (formData.get('profile_education_max') as string) || undefined,
-    profileMaxAge:  (formData.get('profile_max_age') as string) || undefined,
-    profileMinAge:  (formData.get('profile_min_age') as string) || undefined,
-    guestsDietaryRestrictions:  (formData.get('profile_guests_dietary_restrictions') as string) || undefined,
-    guestsProfileDesc:   (formData.get('guests_profile_desc') as string) || undefined,
+    alcoholServed:  (formData.get('alcoholserved') as string) || undefined,
+    eventVibe:  (formData.get('eventvibe') as string) || undefined,
+    totalBudgetMax:  (formData.get('totalbudgetmax') as string) || undefined,
+    totalBudgetMin:  (formData.get('totalbudgetmin') as string) || undefined,
+    guestsMaxNum:  (formData.get('maxnumguests') as string) || undefined,
+    guestsMinNum:  (formData.get('minnumguests') as string) || undefined,
+    hostLaborPortion:  (formData.get('hostlaborportion') as string) || undefined,
+    hostHelpers:  (formData.get('hosthelpers') as string) || undefined,
+    hireOutTasks:  (formData.get('hireouttasks') as string) || undefined,
+    idealEventDesc: (formData.get('idealeventdesc') as string) || undefined,
+    inviteMethod: (formData.get('invitemethod') as string) || '',
+    profileGender: (formData.get('profilegender') as string) || undefined,
+    // profileGenderFemale:  (formData.get('profile_gender_female') as string) || undefined,
+    // profileGenderMale:  (formData.get('profile_gender_male') as string) || undefined,
+    // profileGenderNonbinary:  (formData.get('profile_gender_nonbinary') as string) || undefined,
+    profileEducationMin:  (formData.get('profileeducationmin') as string) || undefined,
+    profileEducationMax:  (formData.get('profileeducationmax') as string) || undefined,
+    profileMaxAge:  (formData.get('profilemaxage') as string) || undefined,
+    profileMinAge:  (formData.get('profileminage') as string) || undefined,
+    guestsProfileDesc:   (formData.get('guestsprofiledesc') as string) || undefined,
 };
 
 if (!inputs.eventName) {
@@ -91,15 +98,12 @@ if (!inputs.eventName) {
           userId: currentUser.id,  //auth() returns session object with user id, getCurrentUser() returns user row with id
           eventName: inputs.eventName,
           // only set a field if it was actually answered — otherwise leave it
-          // undefined so Drizzle uses the column's default/null instead of
-          // writing an empty string
+          // undefined so Drizzle uses the column's default/null instead of writing an empty string
           
-
           eventDateMax: inputs.eventDateMax || undefined,
           eventDateMin: inputs.eventDateMin || undefined,
           outside: inputs.outside ? inputs.outside === 'true' : undefined,
           alcoholServed: inputs.alcoholServed ? inputs.alcoholServed === 'true' : undefined,
-          venueZipCode: inputs.venueZipCode || undefined,
           eventVibe:  inputs.eventVibe || undefined,
           totalBudgetMax: inputs.totalBudgetMax as typeof events.totalBudgetMax.enumValues[number] | undefined,
           totalBudgetMin: inputs.totalBudgetMin as typeof events.totalBudgetMin.enumValues[number] | undefined,
@@ -129,7 +133,10 @@ if (!inputs.eventName) {
           profileEducationMax: inputs.profileEducationMax as typeof event_guests_profile.profileEducationMax.enumValues[number] | undefined,
           profileMaxAge: inputs.profileMaxAge as typeof event_guests_profile.profileMaxAge.enumValues[number] | undefined,
           profileMinAge: inputs.profileMinAge as typeof event_guests_profile.profileMinAge.enumValues[number] | undefined,
-          guestsDietaryRestrictions: inputs.guestsDietaryRestrictions as typeof event_guests_profile.guestsDietaryRestrictions.enumValues[number] | undefined,
+          profileGender: inputs.profileGender as typeof event_guests_profile.profileGender.enumValues[number] | undefined,
+          // profileGenderFemale: inputs.profileGenderFemale as typeof event_guests_profile.profileGenderFemale.enumValues[number] | undefined,
+          // profileGenderMale: inputs.profileGenderMale as typeof event_guests_profile.profileGenderMale.enumValues[number] | undefined,
+          // profileGenderNonbinary: inputs.profileGenderNonbinary as typeof event_guests_profile.profileGenderNonbinary.enumValues[number] | undefined,
           guestsProfileDesc: inputs.guestsProfileDesc || undefined,
         });
       }
@@ -146,24 +153,6 @@ if (!inputs.eventName) {
   }
 }
 
-//total_budget_max
-//total_budget_min
-//event_date_max
-//event_date_min
-//outside yes/no
-//guests_max_num
-//guests_min_num
-//guests_max_age
-//guests_min_age
-//alcohol yes/no
-//guest_food_allergies
-//at_home yes/no
-//zip_code
-//labor_percent
-//helpers (how many)
-//hire out
-//ideal_event_desc
-//guest_profile_desc
 
 //what would you like to name your event?
 //What is your budget? //hi/lo

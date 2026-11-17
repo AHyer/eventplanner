@@ -1,5 +1,5 @@
 // src/components/ui/enum-options.ts
-// DROPDOWN OPTIONS for the pgEnum columns in src/db/schema.ts.
+// DROPDOWN OPTION LABELS for the pgEnum columns in src/db/schema.ts.
 // The `value` is what gets written to the DB and must match the enum exactly —
 // Postgres rejects anything else — so the value types are pulled from the schema
 // with a type-only import (erased at build time, so no server code reaches the client).
@@ -17,6 +17,7 @@ import type {
   taskContextEnum,
   taskPriorityEnum,
   assignedTaskRoleEnum,
+  inviteMethodEnum,
 } from '@/db/schema';
 
 export type EnumOption<T extends string> = { value: T; label: string };
@@ -134,3 +135,11 @@ export const assignedTaskRoleOptions: EnumOption<AssignedTaskRole>[] = [
   { value: 'vendor', label: 'Vendor' },
 ];    
 
+type InviteMethod = (typeof inviteMethodEnum)['enumValues'][number];
+export const inviteMethodOptions: EnumOption<InviteMethod>[] = [
+  { value: 'email', label: 'Email' },
+  { value: 'text', label: 'Text message' },
+  { value: 'phone', label: 'Phone call' },
+  { value: 'mail', label: 'Mail' },
+  { value: 'in_person', label: 'In person' },
+];
